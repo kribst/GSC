@@ -1,0 +1,380 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+{% block title %}Liste Services Géneraux{% endblock %}
+
+
+
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+{% block style %}
+
+<style>
+.status-box {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: black;
+    font-size: 1.1em;
+}
+
+.status-termine {
+    background-color:rgb(94, 204, 120);  /* Vert pour Terminé */
+}
+
+.status-en-cours {
+    background-color: #007bff;  /* Bleu pour En Cours */
+}
+
+.status-en-pause {
+    background-color: yellow;  /* Jaune pour En Pause */
+}
+
+.status-risque {
+    background-color: red;  /* Orange pour Risqué */
+}
+
+.status-planifie {
+    background-color:rgb(185, 185, 185);  /* Gris pour Planifié */
+}
+
+.link-hover {
+    color: black !important;  /* Couleur par défaut */
+    text-decoration: none;     /* Supprime le soulignement */
+}
+
+.link-hover:hover {
+    color: #007bff !important;   /* Couleur de survol (bleu dans cet exemple) */
+}
+
+
+.masquer{
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+<!--lien -->
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+<!--lien -->
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<script>
+tinymce.init({
+    selector: '#id_objectif',
+    height: 300,
+    menubar: false,
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | code',
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Titre 4', block: 'h4'},
+        {title: 'Titre 5', block: 'h5'},
+        {title: 'Titre 6', block: 'h6'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        ul {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul li:before {
+            content: '•'; /* Gros point */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            font-size: 1.5em; /* Taille du gros point */
+        }
+        ul li.arrow:before {
+            content: '➔'; /* Flèche */
+        }
+    `
+});
+
+</script>
+
+
+
+ <div class="container">
+          <div class="page-inner">
+            <div class="page-header">
+              <h3 class="fw-bold mb-3">SERVICES GENERAUX</h3>
+              <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <i class="fa fa-user-shield"></i>
+                </li>
+                  <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'generaux_create' %}">NOUVEAU RAPPORT</a>
+                </li>
+              </ul>
+            </div>
+
+
+
+
+
+
+
+            <div class="row">
+
+
+
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="d-flex align-items-center">
+                      <h4 class="card-title">LISTE DES RAPPORT SERVICES GENERAUX</h4>
+                    </div>
+                  </div>
+
+                  <div class="card-body">
+                    <!-- Modal -->
+
+
+
+                    <div class="table-responsive">
+                      <table
+                        id="add-row"
+                        class="display table table-striped table-hover"
+                      >
+                        <thead>
+                          <tr>
+                            <th style="text-align: center;">Titres</th>
+                            <th style="text-align: center;">Date</th>
+                              <th style="text-align: center;">Description</th>
+                            <th style="text-align: center;">Actions</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                         {% for rapport in rapports %}
+                          <tr>
+                            <td style="text-align: center;" {% if rapport.titre|length > 40 %}class='masquer'{% endif %}><a class="link-hover" href="{% url 'generaux_detail' rapport.pk %}">{{ rapport.titre|truncatechars:40 }}</a></td>
+                             <td style="text-align: center; ">{{ rapport.date }}</td>
+                              <td style="text-align: center;" {% if rapport.titre|length > 40 %}class='masquer'{% endif %}>{{ rapport.titre|truncatechars:40 }}</td>
+                            <td style="text-align: center;" >
+                              <div class="form-button-action">
+                                <button
+                                  type="button"
+                                  data-bs-toggle="tooltip"
+                                  title=""
+                                  class="btn btn-link btn-primary btn-lg"
+                                  data-original-title="Edit Task"
+                                ><a href="{% url 'export_generaux_pdf' rapport.pk %}" title="Télécharger" style="color: rgb(11, 163, 47);"><i class="fa fa-download"></i></a>
+
+                                </button>
+
+                                <button
+                                  type="button"
+                                  data-bs-toggle="tooltip"
+                                  title=""
+                                  class="btn btn-link btn-primary btn-lg"
+                                  data-original-title="Edit Task"
+                                >
+                                <a href="{% url 'generaux_update' rapport.pk %}" title="Modifier">
+                                  <i class="fa fa-edit"></i>
+                                  </a>
+                                </button>
+                                <button
+                                  type="button"
+                                  data-bs-toggle="tooltip"
+                                  title=""
+                                  class="btn btn-link btn-danger"
+                                  data-original-title="Remove"
+                                >
+                                <a href="{% url 'generaux_delete' rapport.pk %}" title="Supprimer" style="color: red;"  onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce rapport ? Cliquez sur OK pour confirmer, ou sur Annuler pour annuler.');">
+                                  <i class="fa fa-times"></i>
+                                  </a>
+                                </button>
+                              </div>
+                            </td>
+
+                          </tr>
+                          {% endfor %}
+
+
+
+
+
+
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="row">
+
+
+                        <div class="col-sm-12 col-md-12">
+    <div class="dataTables_paginate paging_simple_numbers" id="add-row_paginate">
+        </br>
+        <ul class="pagination justify-content-end">
+            {% if page_obj.has_previous %}
+                <li class="paginate_button page-item previous">
+                    <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Précédent</a>
+                </li>
+            {% endif %}
+
+            {% if page_obj.number > 2 %}
+                <li class="paginate_button page-item">
+                    <a href="?page=1" class="page-link">1</a>
+                </li>
+                {% if page_obj.number > 3 %}
+                    <li class="paginate_button page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                {% endif %}
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <li class="paginate_button page-item active">
+                        <a class="page-link" style="color: white !important;">{{ num }}</a>
+                    </li>
+                {% elif num >= page_obj.number|add:-1 and num <= page_obj.number|add:1 %}
+                    <li class="paginate_button page-item">
+                        <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.number < page_obj.paginator.num_pages|add:-1 %}
+                {% if page_obj.number < page_obj.paginator.num_pages|add:-2 %}
+                    <li class="paginate_button page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                {% endif %}
+                <li class="paginate_button page-item">
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">{{ page_obj.paginator.num_pages }}</a>
+                </li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <li class="paginate_button page-item next">
+                    <a href="?page={{ page_obj.next_page_number }}" class="page-link">Suivant</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+
+                    </div>
+
+
+
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+
+{% endblock %}
+
+

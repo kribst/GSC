@@ -1,0 +1,464 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+
+{% block title %}GSC | Nouveau Rapport Hebdomadaire Comptable {{ rapport.titre }}{% endblock %}
+
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}" xmlns="http://www.w3.org/1999/html">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<script>
+  tinymce.init({
+    selector: '#id_description_success',  // Sélecteur pour le champ 'objectif'
+    height: 300,
+    menubar: false,
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | code',
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Titre 4', block: 'h4'},
+        {title: 'Titre 5', block: 'h5'},
+        {title: 'Titre 6', block: 'h6'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        ul {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul li:before {
+            content: '•'; /* Gros point */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            font-size: 1.5em; /* Taille du gros point */
+        }
+        ul li.arrow:before {
+            content: '➔'; /* Flèche */
+        }
+    `
+});
+
+
+  tinymce.init({
+    selector: '#id_objectif',  // Sélecteur pour le champ 'objectif'
+       height: 300,
+    menubar: false,
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | code',
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Titre 4', block: 'h4'},
+        {title: 'Titre 5', block: 'h5'},
+        {title: 'Titre 6', block: 'h6'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        ul {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul li:before {
+            content: '•'; /* Gros point */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            font-size: 1.5em; /* Taille du gros point */
+        }
+        ul li.arrow:before {
+            content: '➔'; /* Flèche */
+        }
+    `
+});
+
+
+
+
+
+tinymce.init({
+    selector: '#id_description_echec',  // Sélecteur pour le champ 'objectif'
+       height: 300,
+    menubar: false,
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | code',
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Titre 4', block: 'h4'},
+        {title: 'Titre 5', block: 'h5'},
+        {title: 'Titre 6', block: 'h6'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        ul {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul li:before {
+            content: '•'; /* Gros point */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            font-size: 1.5em; /* Taille du gros point */
+        }
+        ul li.arrow:before {
+            content: '➔'; /* Flèche */
+        }
+    `
+});
+
+
+
+tinymce.init({
+    selector: '#id_description_recommandation',  // Sélecteur pour le champ 'objectif'
+       height: 300,
+    menubar: false,
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | code',
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Titre 4', block: 'h4'},
+        {title: 'Titre 5', block: 'h5'},
+        {title: 'Titre 6', block: 'h6'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        ul {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul li:before {
+            content: '•'; /* Gros point */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            font-size: 1.5em; /* Taille du gros point */
+        }
+        ul li.arrow:before {
+            content: '➔'; /* Flèche */
+        }
+    `
+});
+
+
+
+tinymce.init({
+    selector: '#id_description_dificulte',  // Sélecteur pour le champ 'objectif'
+       height: 300,
+    menubar: false,
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | code',
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Titre 4', block: 'h4'},
+        {title: 'Titre 5', block: 'h5'},
+        {title: 'Titre 6', block: 'h6'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        ul {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul li:before {
+            content: '•'; /* Gros point */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            font-size: 1.5em; /* Taille du gros point */
+        }
+        ul li.arrow:before {
+            content: '➔'; /* Flèche */
+        }
+    `
+});
+
+
+
+tinymce.init({
+    selector: '#id_description_activite_vente',  // Sélecteur pour le champ 'objectif'
+       height: 300,
+    menubar: false,
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | code',
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Titre 4', block: 'h4'},
+        {title: 'Titre 5', block: 'h5'},
+        {title: 'Titre 6', block: 'h6'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        ul {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul li:before {
+            content: '•'; /* Gros point */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            font-size: 1.5em; /* Taille du gros point */
+        }
+        ul li.arrow:before {
+            content: '➔'; /* Flèche */
+        }
+    `
+});
+
+tinymce.init({
+    selector: '#id_description_autre',  // Sélecteur pour le champ 'objectif'
+    height: 300,
+       height: 300,
+    menubar: false,
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | code',
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Titre 4', block: 'h4'},
+        {title: 'Titre 5', block: 'h5'},
+        {title: 'Titre 6', block: 'h6'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        ul {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul li:before {
+            content: '•'; /* Gros point */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            font-size: 1.5em; /* Taille du gros point */
+        }
+        ul li.arrow:before {
+            content: '➔'; /* Flèche */
+        }
+    `
+});
+</script>
+
+<style>
+
+  table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+  }
+  th, td {
+      border: 1px solid;
+      padding: 8px;
+      text-align: left;
+  }
+
+</style>
+
+<style>
+<!--lien -->
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+<!--lien -->
+
+</style>
+
+
+  <style>
+        .rapport-container {
+            border: 2px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            text-align: center;
+            width: fit-content;
+            margin: auto; /* Centre le conteneur dans la page */
+        }
+    </style>
+
+ <style>
+        .activites-container {
+            background-color: limegreen; /* Fond vert vif */
+            color: black; /* Texte en noir */
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            padding: 10px; /* Uniforme pour créer un carré */
+            display: inline-block; /* Ajuste la taille au texte */
+            text-align: center;
+            line-height: 1; /* Évite un trop grand espacement vertical */
+        }
+    </style>
+
+
+        <div class="container">
+          <div class="page-inner">
+            <div class="page-header">
+              <h3 class="fw-bold mb-3">RAPPORT HEBDOMADAIRE SERVICE GENERAUX</h3>
+              <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <i class="fa fa-user-shield"></i>
+                </li>
+                <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'generaux_create' %}">NOUVEAU RAPPPORT</a>
+                </li>
+                  <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'generaux_update' generaux.pk %}">MODIFIER</a>
+                </li>
+                  </li>
+                  <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'generaux_delete' generaux.pk %}">SUPPRIMER</a>
+                </li>
+                <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'generaux_list'  %}">LISTE</a>
+                </li>
+              </ul>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">
+                        <div class="d-flex align-items-center">
+                      <h4 class="card-title">TÉLÉCHARGEZ CE RAPPORT MAINTENANT !</h4>
+                      <a class="btn btn btn-round ms-auto" style="background-color: rgb(11, 163, 47); color: white; background-color: darkgreen;" href="{% url 'export_generaux_pdf' generaux.pk %}">
+                            <i class="fa fa-download"></i> Télécharger
+                        </a>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-12">
+
+
+
+                                            </br></br>
+                            <div class="rapport-container">
+                                RAPPORT HEBDOMADAIRE SERVICES GÉNÉRAUX
+                            </div>
+                          </br></br>
+
+                          <div class="row">
+                              <div class="col-md-12" style="text-align: center;">
+                                  <h3 class="fw-bold mb-3" style="text-align: center;">SEMAINE DU {{ hebdo }}</h3>
+                              </div>
+                          </div>
+                          </br>
+                          <div class="row">
+                              <div style="text-align: center;">
+                                  <blockquote class="activites-container">ACTIVITES</blockquote>
+                                </div>
+                          </div>
+                          </br>
+                             <div class="row">
+                              <div class="col-md-12">
+                                  {{ generaux.description|safe }}
+                              </div>
+                          </div>
+                           </br></br> </br>
+
+
+
+
+
+
+
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+{% endblock %}

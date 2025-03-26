@@ -1,0 +1,620 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+{% block title %}GSC | Nouveau Rapport Hebdomadaire Marqueting {% endblock %}
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<script>
+tinymce.init({
+    selector: '#id_autre',  // Sélecteur pour le champ 'objectif'
+    height: 300,
+    menubar: false,
+    plugins: 'table lists', // Assurez-vous que le plugin de listes est inclus
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | customBullets | code',
+    setup: function (editor) {
+        // Ajout d'un bouton personnalisé pour les puces
+        editor.ui.registry.addButton('customBullets', {
+            text: 'Puces Personnalisées',
+            onAction: function () {
+                editor.insertContent('<ul class="custom-bullets"><li>• Exemple de puce</li><li>➔ Exemple de flèche</li><li>★ Exemple d\'étoile</li></ul>');
+            }
+        });
+    },
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        /* Titres */
+        h1 { font-size: 26px; font-weight: bold; margin-bottom: 16px; color: #333; }
+        h2 { font-size: 20px; font-weight: bold; margin-bottom: 14px; color: #444; }
+        h3 { font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #555; }
+
+        /* Paragraphe */
+        p { font-size: 16px; line-height: 1.6; margin-bottom: 12px; color: #333; }
+
+        /* Listes personnalisées */
+        ul.custom-bullets {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul.custom-bullets li:before {
+            content: '•'; /* Exemple de puce */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            color: #666; /* Couleur de la puce */
+        }
+        ul.custom-bullets li.arrow:before {
+            content: '➔'; /* Flèche */
+            margin-right: 8px;
+            color: #666;
+        }
+        ul.custom-bullets li.star:before {
+            content: '★'; /* Étoile */
+            margin-right: 8px;
+            color: gold; /* Couleur de l'étoile */
+        }
+    `
+});
+</script>
+
+
+
+<style>
+<!--lien -->
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+<!--lien -->
+
+ .remove-variant {
+    margin-left: 10px;
+    background-color: #FF0000;
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-variant:hover {
+    background-color: #CC0000; /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-variant:active {
+    background-color: #990000; /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+
+</style>
+
+
+
+<style>
+/* Rend la table responsive en ajoutant un défilement horizontal */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+/* Améliore l'affichage de la table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: auto; /* Permet aux colonnes de s'adapter au contenu */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Media Query pour les petits écrans */
+@media (max-width: 768px) {
+    th, td {
+        font-size: 12px; /* Réduit la taille du texte */
+        padding: 5px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+}
+
+
+ .remove-variant {
+    margin-left: 10px;
+    background-color: #FF0000;
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-variant:hover {
+    background-color: #CC0000; /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-variant:active {
+    background-color: #990000; /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+
+</style>
+
+
+<style>
+
+ .remove-ajout {
+    margin-left: 10px;
+    background-color:rgb(0, 64, 255);
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-ajout:hover {
+    background-color:rgb(0, 64, 255); /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-ajout:active {
+    background-color:rgb(255, 255, 255); /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+</style>
+
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">DÉPARTEMENT MARKETING</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a>
+                        <i class="far fa-chart-bar text-warning"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'marqueting_list' %}">LISTE</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">CRÉER UN RAPPORT ICI</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form.titre.label }}
+                                                {{ form.titre }}
+                                                {{ form.titre.errors }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form.date.label }}
+                                                {{ form.date }}
+                                                {{ form.date.errors }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form.statut.label }}
+                                                {{ form.statut }}
+                                                {{ form.statut.errors }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {{ form.objectif.label }}
+                                                {{ form.objectif }}
+                                                {{ form.objectif.errors }}
+                                            </div>
+                                        </div>
+                                        <br>
+
+                                        <div class="table-responsive">
+                                            <table>
+                                           <tr>
+                                        <td rowspan="2">Indicateurs</td>
+                                        <td rowspan="2">Objectifs</td>
+                                        <td rowspan="2">Quantité</td>
+                                        <td rowspan="2">TotalTotalTotal</td>
+                                        <td rowspan="2">Acteurs</td>
+                                        <td rowspan="2">Activités</td>
+                                        <td colspan="2">Clients</td>
+                                        <td colspan="4">Liste Produits</td>
+                                        <td rowspan="2">Statut</td>
+                                        <td rowspan="2">Difficultés rencontrées</td>
+                                        <td rowspan="2">Raisons de l'échec de l'objectif</td>
+                                        <td rowspan="2">Actions correctives</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Entreprises</td>
+                                        <td>Particuliers</td>
+                                        <td>Services</td>
+                                        <td>Consommables</td>
+                                        <td>Matériel informatique</td>
+                                        <td>Formation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nombre de rendez-vous</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_objectifs }} {{ form.Nombre_de_rendez_vous_objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_quantite_Objectifs }} {{ form.Nombre_de_rendez_vous_quantite_Objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_Total_Objectifs }} {{ form.Nombre_de_rendez_vous_Total_Objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_acteur }} {{ form.Nombre_de_rendez_vous_acteur.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_Activites }} {{ form.Nombre_de_rendez_vous_Activites.errors }}</td>
+                                        <td> {{ form.Nombre_de_rendez_vous_Entreprises }} {{ form.Nombre_de_rendez_vous_Entreprises.errors }}</td>
+                                        <td> {{ form.Nombre_de_rendez_vous_Particuliers }} {{ form.Nombre_de_rendez_vous_Particuliers.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_Services }} {{ form.Nombre_de_rendez_vous_Services.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_Consommables }} {{ form.Nombre_de_rendez_vous_Consommables.errors }}</td>
+                                        <td> {{ form.Nombre_de_rendez_vous_Matériel_informatique }} {{ form.Nombre_de_rendez_vous_Matériel_informatique.errors }}</td>
+                                        <td> {{ form.Nombre_de_rendez_vous_Formation }} {{ form.Nombre_de_rendez_vous_Formation.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_Statut }} {{ form.Nombre_de_rendez_vous_Statut.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_Difficultés_rencontrees }} {{ form.Nombre_de_rendez_vous_Difficultés_rencontrees.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_Raisons_e_l_echec_de_l_objectif }} {{ form.Nombre_de_rendez_vous_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                                        <td>{{ form.Nombre_de_rendez_vous_Actions_correctives }} {{ form.Nombre_de_rendez_vous_Actions_correctives.errors }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nombre de proposition commerciale</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_objectifs }} {{ form.Nombre_de_proposition_commerciale_objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_quantite_Objectifs }} {{ form.Nombre_de_proposition_commerciale_quantite_Objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commercialele_Total_Objectifs }} {{ form.Nombre_de_proposition_commerciale_Total_Objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commercialele_acteur }} {{ form.Nombre_de_proposition_commerciale_acteur.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_Activités }} {{ form.Nombre_de_proposition_commerciale_Activités.errors }}</td>
+                                        <td> {{ form.Nombre_de_proposition_commerciale_Entreprises }} {{ form.Nombre_de_proposition_commerciale_Entreprises.errors }}</td>
+                                        <td> {{ form.Nombre_de_proposition_commerciale_Particuliers }} {{ form.Nombre_de_proposition_commerciale_Particuliers.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_Services }} {{ form.Nombre_de_proposition_commerciale_Services.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_Consommables }} {{ form.Nombre_de_proposition_commerciale_Consommables.errors }}</td>
+                                        <td> {{ form.Nombre_de_proposition_commerciale_Materiel_informatique }} {{ form.Nombre_de_proposition_commerciale_Materiel_informatique.errors }}</td>
+                                        <td> {{ form.Nombre_de_proposition_commerciale_Formation }} {{ form.Nombre_de_proposition_commerciale_Formation.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_Statut }} {{ form.Nombre_de_proposition_commerciale_Statut.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_Difficultes_rencontrees }} {{ form.Nombre_de_proposition_commerciale_Difficultes_rencontrees.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_Raisons_e_l_echec_de_l_objectif }} {{ form.Nombre_de_proposition_commerciale_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                                        <td>{{ form.Nombre_de_proposition_commerciale_Actions_correctives }} {{ form.Nombre_de_proposition_commerciale_Actions_correctives.errors }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nombre de prospections</td>
+                                        <td>{{ form.Nombre_de_prospections_objectifs }} {{ form.Nombre_de_prospections_objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_quantite_Objectifs }} {{ form.Nombre_de_prospections_quantite_Objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospectionsle_Total_Objectifs }} {{ form.Nombre_de_prospectionsle_Total_Objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_acteur }} {{ form.Nombre_de_prospections_acteur.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_Activites }} {{ form.Nombre_de_prospections_Activites.errors }}</td>
+                                        <td> {{ form.Nombre_de_prospections_Entreprises }} {{ form.Nombre_de_prospections_Entreprises.errors }}</td>
+                                        <td> {{ form.Nombre_de_prospections_Particuliers }} {{ form.Nombre_de_prospections_Particuliers.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_Services }} {{ form.Nombre_de_prospections_Services.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_Consommables }} {{ form.Nombre_de_prospections_Consommables.errors }}</td>
+                                        <td> {{ form.Nombre_de_prospections_Materiel_informatique }} {{ form.Nombre_de_prospections_Materiel_informatique.errors }}</td>
+                                        <td> {{ form.Nombre_de_prospections_Formation }} {{ form.Nombre_de_prospections_Formation.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_Statut }} {{ form.Nombre_de_prospections_Statut.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_Difficultés_rencontrees }} {{ form.Nombre_de_prospections_Difficultés_rencontrees.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_Raisons_e_l_echec_de_l_objectif }} {{ form.Nombre_de_prospections_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                                        <td>{{ form.Nombre_de_prospections_Actions_correctives }} {{ form.Nombre_de_prospections_Actions_correctives.errors }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Relance</td>
+                                        <td>{{ form.Relance_objectifs }} {{ form.Relance_objectifs.errors }}</td>
+                                        <td>{{ form.Relance_quantité_Objectifs }} {{ form.Relance_quantité_Objectifs.errors }}</td>
+                                        <td>{{ form.Relancele_Total_Objectifs }} {{ form.Relancele_Total_Objectifs.errors }}</td>
+                                        <td>{{ form.Relance_acteur }} {{ form.Relance_acteur.errors }}</td>
+                                        <td>{{ form.Relance_Activités }} {{ form.Relance_Activités.errors }}</td>
+                                        <td> {{ form.Relance_Entreprises }} {{ form.Relance_Entreprises.errors }}</td>
+                                        <td> {{ form.Relance_Particuliers }} {{ form.Relance_Particuliers.errors }}</td>
+                                        <td>{{ form.Relance_Services }} {{ form.Relance_Services.errors }}</td>
+                                        <td>{{ form.Relance_Consommables }} {{ form.Relance_Consommables.errors }}</td>
+                                        <td> {{ form.Relance_Materiel_informatique }} {{ form.Relance_Materiel_informatique.errors }}</td>
+                                        <td> {{ form.Relance_Formation }} {{ form.Relance_Formation.errors }}</td>
+                                        <td>{{ form.Relance_Statut }} {{ form.Relance_Statut.errors }}</td>
+                                        <td>{{ form.Relance_Difficultés_rencontrees }} {{ form.Relance_Difficultés_rencontrees.errors }}</td>
+                                        <td>{{ form.Relance_Raisons_e_l_echec_de_l_objectif }} {{ form.Relance_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                                        <td>{{ form.Relance_Actions_correctives }} {{ form.Relance_Actions_correctives.errors }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Nombre de devis élaborés</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_objectifs }} {{ form.Nombre_de_devis_elabores_objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_quantité_Objectifs }} {{ form.Nombre_de_devis_elabores_quantité_Objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elaboresle_Total_Objectifs }} {{ form.Relancele_Total_Objectifs.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_acteur }} {{ form.Nombre_de_devis_elabores_acteur.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_Activités }} {{ form.Nombre_de_devis_elabores_Activités.errors }}</td>
+                                        <td> {{ form.Nombre_de_devis_elabores_Entreprises }} {{ form.Nombre_de_devis_elabores_Entreprises.errors }}</td>
+                                        <td> {{ form.Nombre_de_devis_elabores_Particuliers }} {{ form.Nombre_de_devis_elabores_Particuliers.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_Services }} {{ form.Nombre_de_devis_elabores_Services.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_Consommables }} {{ form.Nombre_de_devis_elabores_Consommables.errors }}</td>
+                                        <td> {{ form.Nombre_de_devis_elabores_Materiel_informatique }} {{ form.Nombre_de_devis_elabores_Materiel_informatique.errors }}</td>
+                                        <td> {{ form.Nombre_de_devis_elabores_Formation }} {{ form.Nombre_de_devis_elabores_Formation.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_Statut }} {{ form.Nombre_de_devis_elabores_Statut.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_Difficultés_rencontrees }} {{ form.Nombre_de_devis_elabores_Difficultés_rencontrees.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_Raisons_e_l_echec_de_l_objectif }} {{ form.Nombre_de_devis_elabores_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                                        <td>{{ form.Nombre_de_devis_elabores_Actions_correctives }} {{ form.Nombre_de_devis_elabores_Actions_correctives.errors }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Devis en attente</td>
+                                        <td>{{ form.Devis_en_attente_objectifs }} {{ form.Devis_en_attente_objectifs.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elabores_quantité_Objectifs }} {{ form.Devis_en_attente_elabores_quantité_Objectifs.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elaboresle_Total_Objectifs }} {{ form.Devis_en_attente_elaboresle_Total_Objectifs.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elaboresle_acteur }} {{ form.Devis_en_attente_elaboresle_acteur.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elabores_Activités }} {{ form.Devis_en_attente_elabores_Activités.errors }}</td>
+                                        <td> {{ form.Devis_en_attente_elabores_Entreprises }} {{ form.Devis_en_attente_elabores_Entreprises.errors }}</td>
+                                        <td> {{ form.Devis_en_attente_elabores_Particuliers }} {{ form.Devis_en_attente_elabores_Particuliers.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elabores_Services }} {{ form.Devis_en_attente_elabores_Services.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elabores_Consommables }} {{ form.Devis_en_attente_elabores_Consommables.errors }}</td>
+                                        <td> {{ form.Devis_en_attente_elabores_Matériel_informatique }} {{ form.Devis_en_attente_elabores_Matériel_informatique.errors }}</td>
+                                        <td> {{ form.Devis_en_attente_elabores_Formation }} {{ form.Devis_en_attente_elabores_Formation.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elabores_Statut }} {{ form.Devis_en_attente_elabores_Statut.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elabores_Difficultés_rencontrees }} {{ form.Devis_en_attente_elabores_Difficultés_rencontrees.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elabores_Raisons_e_l_echec_de_l_objectif }} {{ form.Devis_en_attente_elabores_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                                        <td>{{ form.Devis_en_attente_elabores_Actions_correctives }} {{ form.Devis_en_attente_elabores_Actions_correctives.errors }}</td>
+                                    </tr>
+
+                                </table>
+                                        </div>
+
+                                        <br><br>
+
+                                        <h2>INFORMATIONS SUPPLÉMENTAIRES</h2>
+                                        <div class="table-responsive" id="formset-container">
+    {{ variant_formset.management_form }}
+    <!-- Gestion du formset -->
+    {% for variant_form in variant_formset %}
+    <div class="variant-form">
+        <table border="1">
+            <tr>
+                <td rowspan="2" class="delete-header">Supprimer</td>
+                <td rowspan="2">Indicateurs</td>
+                <td rowspan="2">Objectifs</td>
+                <td rowspan="2">Quantité</td>
+                <td rowspan="2">Total</td>
+                <td rowspan="2">Acteurs</td>
+                <td rowspan="2">Activités</td>
+                <td colspan="2">Clients</td>
+                <td colspan="4">Liste Produits</td>
+                <td rowspan="2">Statut</td>
+                <td rowspan="2">Difficultés rencontrées</td>
+                <td rowspan="2">Raisons de l'échec de l'objectif</td>
+                <td rowspan="2">Actions correctives</td>
+            </tr>
+            <tr>
+                <td>Entreprises</td>
+                <td>Particuliers</td>
+                <td>Services</td>
+                <td>Consommables</td>
+                <td>Matériel informatique</td>
+                <td>Formation</td>
+            </tr>
+            <tr>
+                <td class="delete-button-cell"><button type="button" class="remove-variant" style="padding: 4px 8px;">Supprimer</button></td>
+                <td>{{ variant_form.autre_un }} {{ variant_form.autre_un.errors }}</td>
+                <td>{{ variant_form.objectifs }} {{ variant_form.objectifs.errors }}</td>
+                <td>{{ variant_form.quantites }} {{ variant_form.quantites.errors }}</td>
+                <td>{{ variant_form.Total }} {{ variant_form.Total.errors }}</td>
+                <td>{{ variant_form.acteur }} {{ variant_form.acteur.errors }}</td>
+                <td>{{ variant_form.Activites }} {{ variant_form.Activites.errors }}</td>
+                <td>{{ variant_form.Entreprises }} {{ variant_form.Entreprises.errors }}</td>
+                <td>{{ variant_form.Particuliers }} {{ variant_form.Particuliers.errors }}</td>
+                <td>{{ variant_form.Services }} {{ variant_form.Services.errors }}</td>
+                <td>{{ variant_form.Consommables }} {{ variant_form.Consommables.errors }}</td>
+                <td>{{ variant_form.materiel_informatique }} {{ variant_form.materiel_informatique.errors }}</td>
+                <td>{{ variant_form.formation }} {{ variant_form.formation.errors }}</td>
+                <td>{{ variant_form.Statut }} {{ variant_form.Statut.errors }}</td>
+                <td>{{ variant_form.Difficultes_rencontrees }} {{ variant_form.Difficultes_rencontrees.errors }}</td>
+                <td>{{ variant_form.Raisons_e_l_echec_de_l_objectif }} {{ variant_form.Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                <td>{{ variant_form.Actions_correctives }} {{ variant_form.Actions_correctives.errors }}</td>
+            </tr>
+        </table>
+    </div>
+    {% endfor %}
+</div>
+<br>
+<button type="button" id="add-variant" class="remove-ajout">➕ AJOUTER UNE LIGNE</button>
+<br>
+
+<!-- ✅ Script JavaScript -->
+<script>
+    function updateDeleteButtons() {
+        const variantForms = document.querySelectorAll(".variant-form");
+        const firstForm = variantForms[0];
+        const lastForm = variantForms[variantForms.length - 1];
+
+        // Masquer ou afficher les éléments "Supprimer"
+        if (variantForms.length > 1) {
+            firstForm.querySelector(".delete-header").style.display = "none";
+            firstForm.querySelector(".delete-button-cell").style.display = "none";
+            lastForm.querySelector(".delete-header").style.display = "table-cell";
+            lastForm.querySelector(".delete-button-cell").style.display = "table-cell";
+        } else {
+            firstForm.querySelector(".delete-header").style.display = "none";
+            firstForm.querySelector(".delete-button-cell").style.display = "none";
+        }
+    }
+
+    document.getElementById("add-variant").addEventListener("click", function() {
+        const formsetContainer = document.getElementById("formset-container");
+        const totalForms = document.querySelectorAll(".variant-form").length;
+        const lastForm = document.querySelector(".variant-form:last-child");
+        const newForm = lastForm.cloneNode(true);
+
+        // Met à jour les attributs des champs
+        newForm.querySelectorAll("input, select, textarea").forEach(function(field) {
+            const name = field.getAttribute("name");
+            if (name) {
+                const newName = name.replace(/\d+/, totalForms); // Incrémentation de l'index
+                field.setAttribute("name", newName);
+                field.setAttribute("id", "id_" + newName);
+                field.value = ""; // Réinitialisation des valeurs
+            }
+        });
+
+        // Ajout du nouveau formulaire
+        formsetContainer.appendChild(newForm);
+
+        // Mise à jour de TOTAL_FORMS
+        const managementForm = document.querySelector('#id_' + '{{ variant_formset.prefix }}' + '-TOTAL_FORMS');
+        if (managementForm) {
+            managementForm.value = totalForms + 1;
+        }
+
+        updateDeleteButtons(); // Met à jour les boutons "Supprimer"
+    });
+
+    // Suppression d'une variante
+    document.addEventListener("click", function(e) {
+        if (e.target && e.target.classList.contains("remove-variant")) {
+            const variantForm = e.target.closest(".variant-form");
+            variantForm.remove();
+
+            // Mise à jour de TOTAL_FORMS après suppression
+            const managementForm = document.querySelector('#id_' + '{{ variant_formset.prefix }}' + '-TOTAL_FORMS');
+            const totalForms = document.querySelectorAll(".variant-form").length;
+            if (managementForm) {
+                managementForm.value = totalForms;
+            }
+
+            updateDeleteButtons(); // Met à jour les boutons "Supprimer"
+        }
+    });
+
+    // Initialisation de la visibilité des boutons "Supprimer"
+    updateDeleteButtons();
+</script>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {{ form.autre.label }}
+                                                {{ form.autre }}
+                                                {{ form.autre.errors }}
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <div class="card-action" style="display: flex; justify-content: flex-end;">
+                                            <button class="remove-ajout" style="margin-left: 10px; border-radius: 6px; padding: 8px 30px;" type="submit">Enregistrer</button>
+                                            <a href="{% url 'liste_comptabilite' %}" class="remove-variant" style="margin-left: 10px; background-color: #FF0000; color: rgb(238, 233, 233); border-radius: 6px;padding: 8px 30px;">Annuler</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

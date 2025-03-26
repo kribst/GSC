@@ -1,0 +1,247 @@
+{% extends "fonctionnality/main.html" %}
+
+{% block title %}GSC | Rapport: {{ rapport.titre }}{% endblock %}
+
+
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+
+
+{% block content %}
+<style>
+.rapport-container {
+    font-family: 'Times New Roman', Times, serif; /* Police classique pour les rapports */
+    line-height: 1.5; /* Améliore la lisibilité */
+    color: #333; /* Couleur du texte */
+}
+
+h1, h2 {
+    margin: 20px 0; /* Espacement autour des titres */
+    text-align: center; /* Centrer les titres */
+}
+
+h1 {
+    font-size: 2.5rem; /* 40px */
+}
+
+h2 {
+    font-size: 2rem; /* 32px */
+}
+
+<!--lien -->
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+<!--lien -->
+
+
+
+</style>
+
+<style>
+
+
+     .telechargement {
+    margin-left: 10px;
+    background-color:rgba(8, 169, 16, 0.97);
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .telechargement:hover {
+    background-color:rgb(9, 170, 19, 0.99); /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .telechargement:active {
+    background-color:rgb(255, 255, 255); /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+</style>
+
+
+
+<div class="container" xmlns="http://www.w3.org/1999/html">
+  <div class="page-inner">
+    <div class="page-header">
+      <h3 class="fw-bold mb-3">RAPPORT INDIVIDUEL</h3>
+      <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+           <i class="fa fa-user-tie"></i>
+        </li>
+        <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'rapport_createindividuel' %}">NOUVEAU RAPPORT</a>
+        </li>
+        <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'rapport_updateindividuel' rapport.pk %}">MODIFIER</a>
+        </li>
+        <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'rapport_deleteindividuel' rapport.pk %}" title="Supprimer" style="color: red;"  onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce rapport ? Cliquez sur OK pour confirmer, ou sur Annuler pour annuler.');">SUPPRIMER</a>
+        </li>
+         <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'rapport_listindividuel' %}">LISTE</a>
+        </li>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header">
+                    <div class="d-flex align-items-center">
+                      <h4 class="card-title">TÉLÉCHARGEZ CE RAPPORT MAINTENANT !</h4>
+                      <a class="btn btn btn-round ms-auto telechargement" style="background-color: rgb(11, 163, 47); color: white; background-color: darkgreen;" href="{% url 'export_individuel_pdf' rapport.pk %}">
+                            <i class="fa fa-download"></i> Télécharger
+                        </a>
+
+                    </div>
+            </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="container rapport-container">
+                  <!-- Contenu du rapport ici -->
+                    </br>
+                     </br>
+                    </br>
+                    <div class="col-md-12"><h1 style="margin: 20px 0; text-align: center; font-size: 2.5rem; text-decoration: underline;">
+    RAPPORT {{ rapport.rapport }} DU {{ rapport.date|date:"j F Y"|upper }}
+</h1></div>
+                  </div>
+                  </br>
+                  <div class="row">
+                    <div class="row">
+                      <div class="col-md-3" style="font-size: 1.2rem;"><span>Nom: </span><strong>{{ rapport.auteur.first_name }}</strong></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3" style="font-size: 1.2rem;"><span>Prénom: </span><strong>{{ rapport.auteur.last_name }}</strong></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3" style="font-size: 1.2rem;"><span>Poste: </span><strong>{{ rapport.auteur.poste }}</strong></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3" style="font-size: 1.2rem;"><span>Statut de l’activités: </span><strong>{{ rapport.statut }}</strong></div>
+                    </div>
+                     <div class="row">
+                      <div class="col-md-3" style="font-size: 1.2rem;"><span>Département: </span><strong>{{ rapport.departement.nom }}</strong></div>
+                    </div>
+                    </br>
+                    </br>
+                    <h2 style="margin: 20px 0; text-align: center; font-size: 2rem;">{{ rapport.titre }}</h2>
+                     </br>
+                    </br>
+                    </br>
+                    </br>
+                  <div class="row">
+                      <div class="col-md-12">{{ rapport.description|safe }}</div>
+                    </div>
+                    </br>
+                    </br>
+
+                  <!-- Ajoutez d'autres éléments selon vos besoins -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

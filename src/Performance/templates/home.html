@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Acceuil | GSC</title>
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'home/assets/img/logo1.png' %}" rel="icon">
+  <link href="{% static 'home/assets/img/logo1.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'home/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'home/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'home/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'home/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'home/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'home/assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    /* CSS du loader */
+    .loader {
+        border: 16px solid #f3f3f3;
+        border-top: 16px solid #3498db;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 2s linear infinite;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+        display: none;
+    }
+  </style>
+
+</head>
+
+<body id="index-page" class="index-page">
+
+  <div id="loader" class="loader"></div>
+
+  <header id="header" class="header d-flex align-items-center fixed-top hidden">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <a href="https://www.gsc-technology.com/" class="d-flex align-items-center me-auto" target="_blank">
+        <img src="{% static 'home/assets/img/global.png' %}" style="width: 25vh; height: 10vh;">
+      </a>
+
+      <a class="btn-getstarted flex-md-shrink-0" href="{% url 'login' %}" style="background-color: #07598a; color: white; padding: 10px 15px; text-align: center; text-decoration: none; border-radius: 5px;">Commencer</a>
+
+    </div>
+  </header>
+
+  <main class="main" style="font-family: 'Times New Roman', Times, serif;">
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+      <div class="container">
+        <div class="row gy-4">
+          <h1></h1>
+          <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+            <h1 data-aos="fade-up" style="color: #08afd7;">Rapports de performance</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Nous sommes fermement convaincus qu'il est essentiel pour le personnel de GLOBAL SOFT AND COMMUNICATION de disposer des ressources nécessaires pour atteindre l'excellence. Cet outil vous permet de rédiger des rapports et de suivre efficacement les performances de chaque individu, équipe et département de manière structurée. Qu'importe votre statut au sein de l'entreprise, tous les outils nécessaires pour créer, modifier et gérer d'autres éléments concernant un rapport, ainsi que pour consulter les performances, sont disponibles ici.</p>
+            <div class="d-flex flex-column flex-md-row" data-aos="fade-up" data-aos-delay="200">
+              <a href="{% url 'signup' %}" class="btn-get-started" style="background-color: #07598a; color: white; padding: 10px 15px; text-align: center; text-decoration: none; border-radius: 5px;">Inscrivez-Vous<i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-out">
+            <img src="{% static 'home/assets/img/hero-img.png' %}" class="img-fluid animated" alt="">
+          </div>
+        </div>
+      </div>
+    </section><!-- /Hero Section -->
+  </main>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'home/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'home/assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'home/assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'home/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'home/assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'home/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'home/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'home/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'home/assets/js/main.js' %}"></script>
+
+  <script>
+    imagesLoaded(document.body, function() {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('header').classList.remove('hidden');
+      document.querySelector('main').classList.remove('hidden');
+    });
+  </script>
+
+</body>
+
+</html>

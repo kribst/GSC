@@ -1,0 +1,298 @@
+{% extends "fonctionnality/main.html" %}
+
+{% block title %}Confirmer la Suppression de {{ rapport.titre }}{% endblock %}
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+{% block style %}
+<style>
+  .blinking {
+      animation: blinking 1s infinite;
+      font-weight: 12px;
+      font-size: 1em;
+      color: #FF0000;
+  }
+  @keyframes blinking {
+      0%, 100% {
+          opacity: 1;
+      }
+      50% {
+          opacity: 0;
+      }
+  }
+  .bold {
+      font-weight: bold;
+      font-size: 1.2em;
+  }
+
+
+  .status-box {
+    color: black;
+    font-size: 1.1em;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.status-termine {
+    color:rgb(94, 204, 120);  /* Vert pour Terminé */
+}
+
+.status-en-cours {
+    color: #007bff;  /* Bleu pour En Cours */
+}
+
+.status-en-pause {
+    color: yellow;  /* Jaune pour En Pause */
+}
+
+.status-risque {
+    color: red;  /* Orange pour Risqué */
+}
+
+.status-planifie {
+    color:rgb(185, 185, 185);  /* Gris pour Planifié */
+}
+
+.link-hover {
+    color: black !important;  /* Couleur par défaut */
+    text-decoration: none;     /* Supprime le soulignement */
+}
+
+.link-hover:hover {
+    color: #007bff !important;   /* Couleur de survol (bleu dans cet exemple) */
+}
+
+
+.masquer{
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+<style>
+<!--lien -->
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+<!--lien -->
+
+</style>
+
+
+<style>
+
+ .remove-ajout {
+    margin-left: 10px;
+    background-color:rgb(0, 64, 255);
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-ajout:hover {
+    background-color:rgb(0, 64, 255); /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-ajout:active {
+    background-color:rgb(255, 255, 255); /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+</style>
+
+
+
+
+
+<div class="container">
+    <div class="page-inner">
+      <div class="page-header">
+        <h3 class="fw-bold mb-3">DÉPARTEMENT TECHNIQUE</h3>
+        <ul class="breadcrumbs mb-3">
+          <li class="nav-home">
+            <a>
+              <i class="fa fa-cogs"></i>
+            </a>
+          </li>
+          <li class="separator">
+            <i class="icon-arrow-right"></i>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'technique_create' %}">NOUVEAU RAPPORT</a>
+          </li>
+          <li class="separator">
+            <i class="icon-arrow-right"></i>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'listTechnique' %}">LISTE</a>
+          </li>
+        </ul>
+      </div>
+
+
+
+
+
+
+
+      <div class="row">
+
+
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex align-items-center">
+                <h4 class="card-title"> Suppression de: {{ rapport.titre }}</h4>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <!-- Modal -->
+              <div class="container">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <br>
+                        <br>
+                        <h1 style="text-align: center; color: #FF0000; font-size: 2.3em; font-weight: bold;">Confirmer la Suppression</h1>
+                        <br>
+                        <br>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><span style="font-weight: bold;">Départment(s):</span>
+
+                                        <span>Technique</span>
+                                </p>
+
+                                <p><span style="font-weight: bold;">Enregistré le :</span><span> {{ rapport.date|date:"j F Y" }}<span></p>
+                              </div>
+                            <div class="col-md-6">
+                                <div class="container">
+                                    <div class="row" style="display: flex;">
+                                        <p><span style="font-weight: bold;">Titre :</span><span> {{ rapport.titre }}<span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <br>
+                        <p class="blinking">Êtes-vous sûr de vouloir supprimer le rapport <span style="font-weight: bold; font-size: 1.2em;">"</span><span style="font-weight: bold; font-size: 1.1em; font-size: 1em;">{{ object }}</span><span style="font-weight: bold; font-size: 1.2em;">"</span> ? Cette action est irréversible.</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="card-action" style="display: flex; justify-content: flex-end;">
+                                <button class="remove-ajout" style="margin-left: 10px; border-radius: 6px; padding: 8px 30px;" type="submit">Supprimer</button>
+                                <a href="{% url 'listTechnique' %}" class="remove-variant" style="margin-left: 10px; background-color: #FF0000; color: rgb(238, 233, 233); border-radius: 6px;padding: 8px 30px;">Annuler</a>
+                             </div>
+                        </form>
+                    </div>
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+{% endblock %}

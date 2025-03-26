@@ -1,0 +1,388 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+{% block title %}GSC | Nouveau Rapport Hebdomadaire Marqueting {% endblock %}
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+tinymce.init({
+    selector: '#id_autre',  // Sélecteur pour le champ 'objectif'
+    height: 300,
+    menubar: false,
+    plugins: 'table lists', // Assurez-vous que le plugin de listes est inclus
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | customBullets | code',
+    setup: function (editor) {
+        // Ajout d'un bouton personnalisé pour les puces
+        editor.ui.registry.addButton('customBullets', {
+            text: 'Puces Personnalisées',
+            onAction: function () {
+                editor.insertContent('<ul class="custom-bullets"><li>• Exemple de puce</li><li>➔ Exemple de flèche</li><li>★ Exemple d\'étoile</li></ul>');
+            }
+        });
+    },
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        /* Titres */
+        h1 { font-size: 26px; font-weight: bold; margin-bottom: 16px; color: #333; }
+        h2 { font-size: 20px; font-weight: bold; margin-bottom: 14px; color: #444; }
+        h3 { font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #555; }
+
+        /* Paragraphe */
+        p { font-size: 16px; line-height: 1.6; margin-bottom: 12px; color: #333; }
+
+        /* Listes personnalisées */
+        ul.custom-bullets {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul.custom-bullets li:before {
+            content: '•'; /* Exemple de puce */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            color: #666; /* Couleur de la puce */
+        }
+        ul.custom-bullets li.arrow:before {
+            content: '➔'; /* Flèche */
+            margin-right: 8px;
+            color: #666;
+        }
+        ul.custom-bullets li.star:before {
+            content: '★'; /* Étoile */
+            margin-right: 8px;
+            color: gold; /* Couleur de l'étoile */
+        }
+    `
+});
+<style>
+/* Rend la table responsive en ajoutant un défilement horizontal */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+/* Améliore l'affichage de la table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: auto; /* Permet aux colonnes de s'adapter au contenu */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Media Query pour les petits écrans */
+@media (max-width: 768px) {
+    th, td {
+        font-size: 12px; /* Réduit la taille du texte */
+        padding: 5px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+}
+
+
+ .remove-variant {
+    margin-left: 10px;
+    background-color: #FF0000;
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-variant:hover {
+    background-color: #CC0000; /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-variant:active {
+    background-color: #990000; /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+
+</style>
+
+
+<style>
+
+ .remove-ajout {
+    margin-left: 10px;
+    background-color:rgb(0, 64, 255);
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-ajout:hover {
+    background-color:rgb(0, 64, 255); /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-ajout:active {
+    background-color:rgb(255, 255, 255); /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+</style>
+
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">RAPPORT HEBDOMADAIRE DEPARTEMENT TECHNIQUEE</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a>
+                        <i class="fas fa-calculator"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'marqueting_list' %}">LISTE</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">CRÉER UN RAPPORT ICI</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form.titre.label }}
+                                                {{ form.titre }}
+                                                {{ form.titre.errors }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form.date.label }}
+                                                {{ form.date }}
+                                                {{ form.date.errors }}
+                                            </div>
+                                        </div>
+
+                                            <br>
+                                        <div class="table-responsive">
+                                            <table>
+
+                                    <tr>
+                                        <th style="background-color: #2E75B6; color: red; font-weight: bold;"></th>
+                                        <th>Sites/Clients</th>
+                                        <th>Actions</th>
+                                        <th>Résultats</th>
+                                        <th>Observations/Remarques</th>
+                                        <th>Statuts</th>
+                                        <th>Facturation/Paiement</th>
+                                        <th>Intervenants</th>
+                                    </tr>
+
+                                     <tr class="sub-category1">
+                                        <td style="background-color: #2E75B6; color: red; font-weight: bold;">ACTIVITÉS EXTERNES</td>
+                                        <td>{{ form.ext_clients }} {{ form.ext_clients.errors }}</td>
+                                        <td>{{ form.ext_action }} {{ form.ext_action.errors }}</td>
+                                        <td>{{ form.ext_resultats }} {{ form.ext_resultats.errors }}</td>
+                                        <td>{{ form.ext_remarque }} {{ form.ext_remarque.errors }}</td>
+                                        <td>{{ form.ext_statuts }} {{ form.ext_statuts.errors }}</td>
+                                        <td> {{ form.ext_paiement }} {{ form.ext_paiement.errors }}</td>
+                                        <td> {{ form.ext_intervenant }} {{ form.ext_intervenant.errors }}</td>
+
+                                    </tr>
+                                </table>
+                                        </div>
+                                        <br>
+                                        <h2>INFORMATIONS SUPPLÉMENTAIRES ACTIVITÉS EXTERNES</h2>
+                                        <div class="table-responsive" id="formset-container">
+     {{ ext_formset.management_form }}
+    <!-- Gestion du formset -->
+    {% for form in ext_formset %}
+    <div class="variant-form">
+        <table border="1">
+            <tr>
+                <th rowspan="1" class="delete-header">Supprimer</th>
+                <th>Sites/Clients</th>
+                 <th>Actions</th>
+                 <th>Résultats</th>
+                 <th>Observations/Remarques</th>
+                 <th>Statuts</th>
+                 <th>Facturation/Paiement</th>
+                 <th>Intervenants</th>
+            </tr>
+            <tr>
+                <td class="delete-button-cell"><button type="button" class="remove-variant" style="padding: 4px 8px;">Supprimer</button></td>
+                <td>{{ form.ext_clients}} {{ form.ext_clients.errors }}</td>
+                <td>{{ form.ext_action }} {{ form.ext_action.errors }}</td>
+                <td>{{ form.ext_resultats }} {{ form.ext_resultats.errors }}</td>
+                <td>{{ form.ext_remarque }} {{ form.ext_remarque.errors }}</td>
+                <td>{{ form.ext_statuts }} {{ form.ext_statuts.errors }}</td>
+                <td>{{ form.ext_paiement }} {{ form.ext_paiement.errors }}</td>
+                <td>{{ form.ext_intervenant }} {{ form.ext_intervenant.errors }}</td>
+            </tr>
+
+        </table>
+    </div>
+    {% endfor %}
+</div>
+<br>
+<button type="button" id="add-variant" class="remove-ajout">➕ AJOUTER UNE LIGNE</button>
+<br>
+
+
+<!-- ✅ Script JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const formsetContainer = document.getElementById("formset-container");
+        const variantForms = document.querySelectorAll(".variant-form");
+
+        // Masquer le formset container et tous les formulaires au départ
+        formsetContainer.style.display = "none";
+        variantForms.forEach(form => form.style.display = "none");
+
+        updateDeleteButtons(); // Mise à jour initiale des boutons "Supprimer"
+    });
+
+    function updateDeleteButtons() {
+        const variantForms = document.querySelectorAll(".variant-form");
+        const formsetContainer = document.getElementById("formset-container");
+
+        if (variantForms.length > 0) {
+            formsetContainer.style.display = "block"; // Afficher le container si des formulaires existent
+            const firstForm = variantForms[0];
+            const lastForm = variantForms[variantForms.length - 1];
+
+            firstForm.querySelector(".delete-header").style.display = "none";
+            firstForm.querySelector(".delete-button-cell").style.display = "none";
+
+            if (variantForms.length > 1) {
+                lastForm.querySelector(".delete-header").style.display = "table-cell";
+                lastForm.querySelector(".delete-button-cell").style.display = "table-cell";
+            }
+        } else {
+            formsetContainer.style.display = "none"; // Cacher si aucun formulaire n'existe
+        }
+    }
+
+    document.getElementById("add-variant").addEventListener("click", function() {
+        const formsetContainer = document.getElementById("formset-container");
+        const totalForms = document.querySelectorAll(".variant-form").length;
+        const lastForm = document.querySelector(".variant-form:last-child");
+        const newForm = lastForm ? lastForm.cloneNode(true) : null;
+
+        if (newForm) {
+            newForm.querySelectorAll("input, select, textarea").forEach(function(field) {
+                const name = field.getAttribute("name");
+                if (name) {
+                    const newName = name.replace(/\d+/, totalForms);
+                    field.setAttribute("name", newName);
+                    field.setAttribute("id", "id_" + newName);
+                    field.value = "";
+                }
+            });
+
+            formsetContainer.appendChild(newForm);
+            newForm.style.display = "none"; // Masquer avant l'affichage progressif
+            setTimeout(() => newForm.style.display = "block", 100); // Affichage progressif
+
+            const managementForm = document.querySelector('#id_' + '{{ variant_formset.prefix }}' + '-TOTAL_FORMS');
+            if (managementForm) {
+                managementForm.value = totalForms + 1;
+            }
+        }
+
+        formsetContainer.style.display = "block"; // Rendre visible le formset container
+        updateDeleteButtons();
+    });
+
+    document.addEventListener("click", function(e) {
+        if (e.target && e.target.classList.contains("remove-variant")) {
+            const variantForm = e.target.closest(".variant-form");
+            variantForm.style.opacity = "0"; // Effet de disparition
+            setTimeout(() => {
+                variantForm.remove();
+
+                const managementForm = document.querySelector('#id_' + '{{ variant_formset.prefix }}' + '-TOTAL_FORMS');
+                const totalForms = document.querySelectorAll(".variant-form").length;
+                if (managementForm) {
+                    managementForm.value = totalForms;
+                }
+
+                updateDeleteButtons();
+            }, 200);
+        }
+    });
+
+</script>
+
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {{ form.autre.label }}
+                                                {{ form.autre }}
+                                                {{ form.autre.errors }}
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <div class="card-action" style="display: flex; justify-content: flex-end;">
+                                            <button class="remove-ajout" style="margin-left: 10px; border-radius: 6px; padding: 8px 30px;" type="submit">Enregistrer</button>
+                                            <a href="{% url 'liste_comptabilite' %}" class="remove-variant" style="margin-left: 10px; background-color: #FF0000; color: rgb(238, 233, 233); border-radius: 6px;padding: 8px 30px;">Annuler</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

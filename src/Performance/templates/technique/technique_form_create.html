@@ -1,0 +1,712 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+{% block title %}GSC | Nouveau Rapport Hebdomadaire Marqueting {% endblock %}
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<script>
+tinymce.init({
+    selector: '#id_autre',
+    height: 300,
+    menubar: false,
+    plugins: 'table lists', // Assurez-vous que le plugin de listes est inclus
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | customBullets | code',
+
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        /* Titres */
+        h1 { font-size: 26px; font-weight: bold; margin-bottom: 16px; color: #333; }
+        h2 { font-size: 20px; font-weight: bold; margin-bottom: 14px; color: #444; }
+        h3 { font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #555; }
+
+        /* Paragraphe */
+        p { font-size: 16px; line-height: 1.6; margin-bottom: 12px; color: #333; }
+
+        /* Listes personnalisées */
+        ul.custom-bullets {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul.custom-bullets li:before {
+            content: '•'; /* Exemple de puce */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            color: #666; /* Couleur de la puce */
+        }
+        ul.custom-bullets li.arrow:before {
+            content: '➔'; /* Flèche */
+            margin-right: 8px;
+            color: #666;
+        }
+        ul.custom-bullets li.star:before {
+            content: '★'; /* Étoile */
+            margin-right: 8px;
+            color: gold; /* Couleur de l'étoile */
+        }
+    `
+});
+</script>
+
+<style>
+ .remove-variantx {
+    margin-left: 10px;
+    background-color: #FF0000;
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-variantx:hover {
+    background-color: #CC0000; /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-variantx:active {
+    background-color: #990000; /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+
+
+</style>
+
+
+
+
+<style>
+/* Rend la table responsive en ajoutant un défilement horizontal */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+/* Améliore l'affichage de la table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: auto; /* Permet aux colonnes de s'adapter au contenu */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Media Query pour les petits écrans */
+@media (max-width: 768px) {
+    th, td {
+        font-size: 12px; /* Réduit la taille du texte */
+        padding: 5px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+}
+
+
+ .remove-variant {
+    margin-left: 10px;
+    background-color: #FF0000;
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-variant:hover {
+    background-color: #CC0000; /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-variant:active {
+    background-color: #990000; /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+
+</style>
+
+
+<style>
+
+ .remove-ajout {
+    margin-left: 10px;
+    background-color:rgb(0, 64, 255);
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-ajout:hover {
+    background-color:rgb(0, 64, 255); /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-ajout:active {
+    background-color:rgb(255, 255, 255); /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+</style>
+<style>
+.status-box {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: black;
+    font-size: 1.1em;
+}
+
+.status-termine {
+    background-color:rgb(94, 204, 120);  /* Vert pour Terminé */
+}
+
+.status-en-cours {
+    background-color: #007bff;  /* Bleu pour En Cours */
+}
+
+.status-en-pause {
+    background-color: yellow;  /* Jaune pour En Pause */
+}
+
+.status-risque {
+    background-color: red;  /* Orange pour Risqué */
+}
+
+.status-planifie {
+    background-color:rgb(185, 185, 185);  /* Gris pour Planifié */
+}
+
+.link-hover {
+    color: black !important;  /* Couleur par défaut */
+    text-decoration: none;     /* Supprime le soulignement */
+}
+
+.link-hover:hover {
+    color: #007bff !important;   /* Couleur de survol (bleu dans cet exemple) */
+}
+
+
+.masquer{
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+<!--lien -->
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+<!--lien -->
+</style>
+
+<style>
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px; /* Réduit l'espace intérieur des cellules */
+    text-align: center; /* Centre le texte */
+    border: 1px solid #ddd; /* Ajoute des bordures fines */
+}
+
+th {
+    background-color: #f4f4f4; /* Ajoute un fond léger aux en-têtes */
+}
+
+.sub-category1 td {
+    width: auto; /* Ajuste automatiquement la largeur des colonnes */
+}
+
+select, input {
+    width: 100%; /* Force les champs à prendre toute la largeur de leur cellule */
+    box-sizing: border-box; /* Évite le débordement */
+}
+
+</style>
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">DÉPARTEMENT TECHNIQUE</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a>
+                        <i class="fa fa-cogs"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'listTechnique' %}">LISTE</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">CRÉER UN RAPPORT ICI</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form.titre.label }}
+                                                {{ form.titre }}
+                                                {{ form.titre.errors }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form.date.label }}
+                                                {{ form.date }}
+                                                {{ form.date.errors }}
+                                            </div>
+                                        </div>
+
+                                            <br>
+                                        <div class="table-responsive">
+                                            <table>
+
+                                    <tr>
+                                        <th rowspan="2">ACTIVITÉS EXTERNES</th>
+                                        <th>Sites/Clients</th>
+                                        <th>Actions</th>
+                                        <th>Résultats</th>
+                                        <th>Observations/Remarques</th>
+                                        <th>Statuts</th>
+                                        <th>Facturation/Paiement</th>
+                                        <th>Intervenants</th>
+                                    </tr>
+
+                                     <tr class="sub-category1">
+                                        <td>{{ form.clients_externe }} {{ form.clients_externe.errors }}</td>
+                                        <td>{{ form.action_externe }} {{ form.action_externe.errors }}</td>
+                                        <td>{{ form.resultats_externe }} {{ form.resultats_externe.errors }}</td>
+                                        <td>{{ form.remarque_externe }} {{ form.remarque_externe.errors }}</td>
+                                        <td>{{ form.statuts_externe }} {{ form.statuts_externe.errors }}</td>
+                                        <td> {{ form.paiement_externe }} {{ form.paiement_externe.errors }}</td>
+                                        <td> {{ form.intervenant_externe }} {{ form.intervenant_externe.errors }}</td>
+
+                                    </tr>
+                                </table>
+                                        </div>
+                                        <br>
+                                        <h4>INFORMATIONS SUPPLÉMENTAIRES ACTIVITÉS EXTERNES(OPTIONNEL)</h4>
+                                        <div class="table-responsive" id="formset-container">
+     {{ ext_formset.management_form }}
+    <!-- Gestion du formset -->
+    {% for form in ext_formset %}
+    <div class="variant-form">
+        <table border="1">
+            <tr>
+                <th rowspan="1" class="delete-header">Supprimer</th>
+                <th>Sites/Clients</th>
+                 <th>Actions</th>
+                 <th>Résultats</th>
+                 <th>Observations/Remarques</th>
+                 <th>Statuts</th>
+                 <th>Facturation/Paiement</th>
+                 <th>Intervenants</th>
+            </tr>
+            <tr>
+                <td class="delete-button-cell"><button type="button" class="remove-variant" style="padding: 4px 8px;">Supprimer</button></td>
+                 <td>{{ form.ext_clients}} {{ form.ext_clients.errors }}</td>
+            <td>{{ form.ext_action }} {{ form.ext_action.errors }}</td>
+            <td>{{ form.ext_resultats }} {{ form.ext_resultats.errors }}</td>
+            <td>{{ form.ext_remarque }} {{ form.ext_remarque.errors }}</td>
+            <td>{{ form.ext_statuts }} {{ form.ext_statuts.errors }}</td>
+            <td>{{ form.ext_paiement }} {{ form.ext_paiement.errors }}</td>
+            <td>{{ form.ext_intervenant }} {{ form.ext_intervenant.errors }}</td>
+            </tr>
+
+        </table>
+          <div style="display:none;">
+          {{ form.DELETE }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<br>
+<button type="button" id="add-variant" class="remove-ajout">➕ AJOUTER UNE LIGNE</button>
+<br>
+                             <br>
+                                <div class="table-responsive" id="nouveau">
+                                            <table>
+
+                                    <tr>
+                                        <th rowspan="2">ACTIVITÉS INTERNES</th>
+                                        <th>Sites/Clients</th>
+                                        <th>Actions</th>
+                                        <th>Résultats</th>
+                                        <th>Observations/Remarques</th>
+                                        <th>Statuts</th>
+                                        <th>Facturation/Paiement</th>
+                                        <th>Intervenants</th>
+                                    </tr>
+
+                                     <tr class="sub-category1">
+                                        <td>{{ form.clients_interne }} {{ form.clients_interne.errors }}</td>
+                                        <td>{{ form.action_interne }} {{ form.action_interne.errors }}</td>
+                                        <td>{{ form.resultats_interne }} {{ form.resultats_interne.errors }}</td>
+                                        <td>{{ form.remarque_interne }} {{ form.remarque_interne.errors }}</td>
+                                        <td>{{ form.statuts_interne }} {{ form.statuts_interne.errors }}</td>
+                                        <td>{{ form.paiement_interne }} {{ form.paiement_interne.errors }}</td>
+                                        <td>{{ form.intervenant_interne }} {{ form.intervenant_interne.errors }}</td>
+                                    </tr>
+                                </table>
+                                        </div>
+                                        <br>
+ <h4>INFORMATIONS SUPPLÉMENTAIRES ACTIVITÉS INTERNES(OPTIONNEL)</h4>
+<div class="table-responsive">
+     {{ int_formset.management_form }}
+    <!-- Gestion du formset -->
+    {% for form in int_formset %}
+    <div class="variant-formx">
+        <table border="1">
+            <tr>
+                <th rowspan="1" class="delete-headerx">Supprimer</th>
+                <th>Sites/Clients</th>
+                 <th>Actions</th>
+                 <th>Résultats</th>
+                 <th>Observations/Remarques</th>
+                 <th>Statuts</th>
+                 <th>Facturation/Paiement</th>
+                 <th>Intervenants</th>
+            </tr>
+            <tr>
+                <td class="delete-button-cell"><button type="button" class="remove-variantx" style="padding: 4px 8px;">Supprimer</button></td>
+                <td>{{ form.int_clients }} {{ form.int_clients.errors }}</td>
+                <td>{{ form.int_action }} {{ form.int_action.errors }}</td>
+                <td>{{ form.int_resultats }} {{ form.int_resultats.errors }}</td>
+                <td>{{ form.int_remarque }} {{ form.int_remarque.errors }}</td>
+                <td>{{ form.int_statuts }} {{ form.int_statuts.errors }}</td>
+                <td>{{ form.int_paiement }} {{ form.int_paiement.errors }}</td>
+                <td>{{ form.int_intervenant }} {{ form.inter_intervenant.errors }}</td>
+            </tr>
+
+        </table>
+          <div style="display:none;">
+          {{ form.DELETE }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<br>
+<button type="button" id="add-variantx" class="remove-ajout">➕ AJOUTER UNE LIGNE</button>
+<br>
+<br>
+ <h4>STATISTIQUES SOMMAIRES DES ACTIVITES</h4>
+<br>
+                                <div>
+                                            <table>
+                                    <tr>
+                                        <th rowspan="3">ACTIVITÉS EXTERNES</th>
+                                        <th>Nombres interventions</th>
+                                        <th>Intervention en attente</th>
+                                        <th>Libelée</th>
+                                        <th>Facturation/Paiement Soldé</th>
+                                    </tr>
+
+                                     <tr class="sub-category1">
+                                        <td>{{ form.nombres_interventions_externe }} {{ form.nombres_interventions_externe.errors }}</td>
+                                        <td>{{ form.Intervention_en_attente_externe }} {{ form.Intervention_en_attente_externe.errors }}</td>
+                                         <td>{{ form.liste }} {{ form.liste.errors }}</td>
+                                        <td>{{ form.Facturation_Paiement_externe }} {{ form.Facturation_Paiement_externe.errors }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ form.champ_un }} {{ form.champ_un.errors }}</th>
+                                        <th>{{ form.champ_deux }} {{ form.champ_deux.errors }}</th>
+                                        <th>{{ form.champ_trois }} {{ form.champ_trois.errors }}</th>
+                                        <th>{{ form.champ_quatre }} {{ form.champ_quatre.errors }}</th>
+                                    </tr>
+                                  <tr class="sub-category1">
+                                         <th>ACTIVITÉS INTERNES</th>
+                                        <td>{{ form.Laptops_Entree }} {{ form.Laptops_Entree.errors }}</td>
+                                        <td>{{ form.Laptop_en_Attente }} {{ form.Laptop_en_Attente.errors }}</td>
+                                        <td></td>
+                                        <td>{{ form.Facturation_Paiement }} {{ form.Facturation_Paiement.errors }}</td>
+                                    </tr>
+
+
+
+
+                                </table>
+                                        </div>
+                                        <br>
+                              <div class="row">
+                                <div class="col-md-12">
+                                    {{ form.autre.label }}
+                                    {{ form.autre }}
+                                    {{ form.autre.errors }}
+                                </div>
+                            </div>
+
+                                        <br>
+                                        <div class="card-action" style="display: flex; justify-content: flex-end;">
+                                            <button class="remove-ajout" style="margin-left: 10px; border-radius: 6px; padding: 8px 30px;" type="submit">Enregistrer</button>
+                                            <a href="{% url 'listTechnique' %}" class="remove-variant" style="margin-left: 10px; background-color: #FF0000; color: rgb(238, 233, 233); border-radius: 6px;padding: 8px 30px;">Annuler</a>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- id variant -->
+<script>
+ document.addEventListener("DOMContentLoaded", function() {
+    const variantForms = document.querySelectorAll(".variant-form");
+    const addVariantBtn = document.getElementById("add-variant");
+
+    function updateVisibleForm() {
+        let visibleFormFound = false;
+        variantForms.forEach(form => {
+            if (!visibleFormFound && hasUserInput(form)) {
+                form.style.display = "block";
+                visibleFormFound = true;
+            } else {
+                form.style.display = "none";
+            }
+        });
+    }
+
+    function hasUserInput(form) {
+        return Array.from(form.querySelectorAll("input, select, textarea")).some(field => {
+            return field.type !== "hidden" && field.value.trim() !== "";
+        });
+    }
+
+    function showHiddenForm() {
+        for (let i = 0; i < variantForms.length; i++) {
+            if (variantForms[i].style.display === "none") {
+                variantForms[i].style.display = "block";
+                return;
+            }
+        }
+    }
+
+    function removeVariantForm(event) {
+        if (event.target && event.target.classList.contains("remove-variant")) {
+            const variantForm = event.target.closest(".variant-form");
+            const deleteField = variantForm.querySelector("input[type='checkbox'][name$='-DELETE']");
+
+            if (deleteField) {
+                deleteField.checked = true;
+            }
+
+            variantForm.querySelectorAll("input, select, textarea").forEach(field => {
+                field.value = "";
+                if (field.tagName === "SELECT") {
+                    field.selectedIndex = 0;
+                }
+            });
+
+            variantForm.style.display = "none";
+        }
+    }
+
+    addVariantBtn.addEventListener("click", showHiddenForm);
+    document.addEventListener("click", removeVariantForm);
+    updateVisibleForm();
+});
+
+</script>
+
+
+
+
+
+<!-- id variant -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const variantForms = document.querySelectorAll(".variant-formx");
+    const addVariantBtn = document.getElementById("add-variantx");
+
+    function updateVisibleForm() {
+        let visibleFormFound = false;
+        variantForms.forEach(form => {
+            if (!visibleFormFound && hasUserInput(form)) {
+                form.style.display = "block";
+                visibleFormFound = true;
+            } else {
+                form.style.display = "none";
+            }
+        });
+    }
+
+    function hasUserInput(form) {
+        return Array.from(form.querySelectorAll("input, select, textarea")).some(field => {
+            return field.type !== "hidden" && field.value.trim() !== "";
+        });
+    }
+
+    function showHiddenForm() {
+        for (let i = 0; i < variantForms.length; i++) {
+            if (variantForms[i].style.display === "none") {
+                variantForms[i].style.display = "block";
+                return;
+            }
+        }
+    }
+
+    function removeVariantForm(event) {
+        if (event.target && event.target.classList.contains("remove-variantx")) {
+            const variantForm = event.target.closest(".variant-formx");
+            const deleteField = variantForm.querySelector("input[type='checkbox'][name$='-DELETE']");
+
+            if (deleteField) {
+                deleteField.checked = true;
+            }
+
+            variantForm.querySelectorAll("input, select, textarea").forEach(field => {
+                field.value = "";
+                if (field.tagName === "SELECT") {
+                    field.selectedIndex = 0;
+                }
+            });
+
+            variantForm.style.display = "none";
+        }
+    }
+
+    addVariantBtn.addEventListener("click", showHiddenForm);
+    document.addEventListener("click", removeVariantForm);
+    updateVisibleForm();
+});
+
+</script>
+
+
+<!-- fin de id variant -->
+
+
+
+<!-- id variant -->
+
+
+<!-- fin de id variant -->
+
+
+
+
+{% endblock %}

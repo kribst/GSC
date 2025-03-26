@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ rapport.titre }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: navy;
+        }
+        p {
+            margin: 0.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ rapport.titre }}</h1>
+    <p><strong>Objectif:</strong> {{ rapport.objectif }}</p>
+    <p><strong>Description:</strong> {{ rapport.description }}</p>
+    <p><strong>Remarque:</strong> {{ rapport.remarque }}</p>
+    <p><strong>Date de publication:</strong> {{ rapport.publie }}</p>
+</body>
+</html>

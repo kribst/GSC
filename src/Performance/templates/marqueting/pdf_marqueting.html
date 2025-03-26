@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <link href="{{ base_url }}static/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{ base_url }}static/css/rapport.css" rel="stylesheet">
+<style>
+/* CSS pour rendre le tableau plus compact et s'assurer qu'il tienne sur une page A4 */
+@page {
+    size: A4;
+    margin: 20mm;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 10pt; /* Réduire la taille de la police pour que le tableau tienne */
+}
+
+table {
+    width: 99.9%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: center;
+    font-size: 9pt; /* Réduire la taille de la police des cellules du tableau */
+}
+
+table td {
+    word-wrap: break-word; /* Permet aux mots longs de se casser pour ne pas déborder */
+}
+
+.container {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Empêcher que le tableau dépasse la largeur de la page */
+.table-responsive {
+    overflow-x: auto;
+}
+
+</style>
+</head>
+<body style="font-family: 'Times New Roman', Times, serif;">
+
+
+
+
+<div class="container mt-5">
+<div>
+
+
+
+  <div class="table-responsive">
+      <table>
+<tr>
+    <tr>
+  <td colspan="16" style="color: white; text-align: center; margin: 0; flex-direction: column; justify-content: center; height: 50px; background-color: rgb(50, 76, 177); font-size: 24px; font-weight: bold;">
+    Rapport hebdommadaire service commercial / marketing
+  </td>
+</tr>
+
+  <td colspan="16" style="text-align: center; font-size: 18px; font-weight: bold;"><strong>semaine du {{ semaine_formatee }}</strong></td>
+</tr>
+<tr>
+  <td rowspan="2">Indicateurs</td>
+  <td rowspan="2">Objectifs</td>
+  <td rowspan="2">Quantité</td>
+  <td rowspan="2">Total</td>
+  <td rowspan="2">Acteurs</td>
+  <td rowspan="2">Activités</td>
+  <td colspan="2">Clients</td>
+  <td colspan="4">Liste Produits</td>
+  <td rowspan="2">Statut</td>
+  <td rowspan="2">Difficultés rencontrées</td>
+  <td rowspan="2">Raisons de l'échec de l'objectif</td>
+  <td rowspan="2">Actions correctives</td>
+</tr>
+<tr>
+  <td>Entreprises</td>
+  <td>Particuliers</td>
+  <td>Services</td>
+  <td>Consommables</td>
+  <td>Matériel informatique</td>
+  <td>Formation</td>
+</tr>
+<tr>
+  <td>Nombre de rendez-vous</td>
+  <td>{{ form.Nombre_de_rendez_vous_objectifs }} {{ form.Nombre_de_rendez_vous_objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_quantite_Objectifs }} {{ form.Nombre_de_rendez_vous_quantite_Objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_Total_Objectifs }} {{ form.Nombre_de_rendez_vous_Total_Objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_acteur }} {{ form.Nombre_de_rendez_vous_acteur.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_Activites }} {{ form.Nombre_de_rendez_vous_Activites.errors }}</td>
+  <td> {{ form.Nombre_de_rendez_vous_Entreprises }} {{ form.Nombre_de_rendez_vous_Entreprises.errors }}</td>
+  <td> {{ form.Nombre_de_rendez_vous_Particuliers }} {{ form.Nombre_de_rendez_vous_Particuliers.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_Services }} {{ form.Nombre_de_rendez_vous_Services.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_Consommables }} {{ form.Nombre_de_rendez_vous_Consommables.errors }}</td>
+  <td> {{ form.Nombre_de_rendez_vous_Matériel_informatique }} {{ form.Nombre_de_rendez_vous_Matériel_informatique.errors }}</td>
+  <td> {{ form.Nombre_de_rendez_vous_Formation }} {{ form.Nombre_de_rendez_vous_Formation.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_Statut }} {{ form.Nombre_de_rendez_vous_Statut.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_Difficultés_rencontrees }} {{ form.Nombre_de_rendez_vous_Difficultés_rencontrees.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_Raisons_e_l_echec_de_l_objectif }} {{ form.Nombre_de_rendez_vous_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+  <td>{{ form.Nombre_de_rendez_vous_Actions_correctives }} {{ form.Nombre_de_rendez_vous_Actions_correctives.errors }}</td>
+</tr>
+<tr>
+  <td>Nombre de proposition commerciale</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_objectifs }} {{ form.Nombre_de_proposition_commerciale_objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_quantite_Objectifs }} {{ form.Nombre_de_proposition_commerciale_quantite_Objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commercialele_Total_Objectifs }} {{ form.Nombre_de_proposition_commerciale_Total_Objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commercialele_acteur }} {{ form.Nombre_de_proposition_commerciale_acteur.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_Activités }} {{ form.Nombre_de_proposition_commerciale_Activités.errors }}</td>
+  <td> {{ form.Nombre_de_proposition_commerciale_Entreprises }} {{ form.Nombre_de_proposition_commerciale_Entreprises.errors }}</td>
+  <td> {{ form.Nombre_de_proposition_commerciale_Particuliers }} {{ form.Nombre_de_proposition_commerciale_Particuliers.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_Services }} {{ form.Nombre_de_proposition_commerciale_Services.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_Consommables }} {{ form.Nombre_de_proposition_commerciale_Consommables.errors }}</td>
+  <td> {{ form.Nombre_de_proposition_commerciale_Materiel_informatique }} {{ form.Nombre_de_proposition_commerciale_Materiel_informatique.errors }}</td>
+  <td> {{ form.Nombre_de_proposition_commerciale_Formation }} {{ form.Nombre_de_proposition_commerciale_Formation.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_Statut }} {{ form.Nombre_de_proposition_commerciale_Statut.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_Difficultes_rencontrees }} {{ form.Nombre_de_proposition_commerciale_Difficultes_rencontrees.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_Raisons_e_l_echec_de_l_objectif }} {{ form.Nombre_de_proposition_commerciale_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+  <td>{{ form.Nombre_de_proposition_commerciale_Actions_correctives }} {{ form.Nombre_de_proposition_commerciale_Actions_correctives.errors }}</td>
+</tr>
+<tr>
+  <td>Nombre de prospections</td>
+  <td>{{ form.Nombre_de_prospections_objectifs }} {{ form.Nombre_de_prospections_objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_quantite_Objectifs }} {{ form.Nombre_de_prospections_quantite_Objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_prospectionsle_Total_Objectifs }} {{ form.Nombre_de_prospectionsle_Total_Objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_acteur }} {{ form.Nombre_de_prospections_acteur.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_Activites }} {{ form.Nombre_de_prospections_Activites.errors }}</td>
+  <td> {{ form.Nombre_de_prospections_Entreprises }} {{ form.Nombre_de_prospections_Entreprises.errors }}</td>
+  <td> {{ form.Nombre_de_prospections_Particuliers }} {{ form.Nombre_de_prospections_Particuliers.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_Services }} {{ form.Nombre_de_prospections_Services.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_Consommables }} {{ form.Nombre_de_prospections_Consommables.errors }}</td>
+  <td> {{ form.Nombre_de_prospections_Materiel_informatique }} {{ form.Nombre_de_prospections_Materiel_informatique.errors }}</td>
+  <td> {{ form.Nombre_de_prospections_Formation }} {{ form.Nombre_de_prospections_Formation.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_Statut }} {{ form.Nombre_de_prospections_Statut.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_Difficultés_rencontrees }} {{ form.Nombre_de_prospections_Difficultés_rencontrees.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_Raisons_e_l_echec_de_l_objectif }} {{ form.Nombre_de_prospections_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+  <td>{{ form.Nombre_de_prospections_Actions_correctives }} {{ form.Nombre_de_prospections_Actions_correctives.errors }}</td>
+</tr>
+<tr>
+  <td>Relance</td>
+  <td>{{ form.Relance_objectifs }} {{ form.Relance_objectifs.errors }}</td>
+  <td>{{ form.Relance_quantité_Objectifs }} {{ form.Relance_quantité_Objectifs.errors }}</td>
+  <td>{{ form.Relancele_Total_Objectifs }} {{ form.Relancele_Total_Objectifs.errors }}</td>
+  <td>{{ form.Relance_acteur }} {{ form.Relance_acteur.errors }}</td>
+  <td>{{ form.Relance_Activités }} {{ form.Relance_Activités.errors }}</td>
+  <td> {{ form.Relance_Entreprises }} {{ form.Relance_Entreprises.errors }}</td>
+  <td> {{ form.Relance_Particuliers }} {{ form.Relance_Particuliers.errors }}</td>
+  <td>{{ form.Relance_Services }} {{ form.Relance_Services.errors }}</td>
+  <td>{{ form.Relance_Consommables }} {{ form.Relance_Consommables.errors }}</td>
+  <td> {{ form.Relance_Materiel_informatique }} {{ form.Relance_Materiel_informatique.errors }}</td>
+  <td> {{ form.Relance_Formation }} {{ form.Relance_Formation.errors }}</td>
+  <td>{{ form.Relance_Statut }} {{ form.Relance_Statut.errors }}</td>
+  <td>{{ form.Relance_Difficultés_rencontrees }} {{ form.Relance_Difficultés_rencontrees.errors }}</td>
+  <td>{{ form.Relance_Raisons_e_l_echec_de_l_objectif }} {{ form.Relance_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+  <td>{{ form.Relance_Actions_correctives }} {{ form.Relance_Actions_correctives.errors }}</td>
+</tr>
+
+<tr>
+  <td>Nombre de devis élaborés</td>
+  <td>{{ form.Nombre_de_devis_elabores_objectifs }} {{ form.Nombre_de_devis_elabores_objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_quantité_Objectifs }} {{ form.Nombre_de_devis_elabores_quantité_Objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elaboresle_Total_Objectifs }} {{ form.Relancele_Total_Objectifs.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_acteur }} {{ form.Nombre_de_devis_elabores_acteur.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_Activités }} {{ form.Nombre_de_devis_elabores_Activités.errors }}</td>
+  <td> {{ form.Nombre_de_devis_elabores_Entreprises }} {{ form.Nombre_de_devis_elabores_Entreprises.errors }}</td>
+  <td> {{ form.Nombre_de_devis_elabores_Particuliers }} {{ form.Nombre_de_devis_elabores_Particuliers.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_Services }} {{ form.Nombre_de_devis_elabores_Services.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_Consommables }} {{ form.Nombre_de_devis_elabores_Consommables.errors }}</td>
+  <td> {{ form.Nombre_de_devis_elabores_Materiel_informatique }} {{ form.Nombre_de_devis_elabores_Materiel_informatique.errors }}</td>
+  <td> {{ form.Nombre_de_devis_elabores_Formation }} {{ form.Nombre_de_devis_elabores_Formation.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_Statut }} {{ form.Nombre_de_devis_elabores_Statut.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_Difficultés_rencontrees }} {{ form.Nombre_de_devis_elabores_Difficultés_rencontrees.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_Raisons_e_l_echec_de_l_objectif }} {{ form.Nombre_de_devis_elabores_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+  <td>{{ form.Nombre_de_devis_elabores_Actions_correctives }} {{ form.Nombre_de_devis_elabores_Actions_correctives.errors }}</td>
+</tr>
+
+<tr>
+  <td>Devis en attente</td>
+  <td>{{ form.Devis_en_attente_objectifs }} {{ form.Devis_en_attente_objectifs.errors }}</td>
+  <td>{{ form.Devis_en_attente_elabores_quantité_Objectifs }} {{ form.Devis_en_attente_elabores_quantité_Objectifs.errors }}</td>
+  <td>{{ form.Devis_en_attente_elaboresle_Total_Objectifs }} {{ form.Devis_en_attente_elaboresle_Total_Objectifs.errors }}</td>
+  <td>{{ form.Devis_en_attente_elaboresle_acteur }} {{ form.Devis_en_attente_elaboresle_acteur.errors }}</td>
+  <td>{{ form.Devis_en_attente_elabores_Activités }} {{ form.Devis_en_attente_elabores_Activités.errors }}</td>
+  <td> {{ form.Devis_en_attente_elabores_Entreprises }} {{ form.Devis_en_attente_elabores_Entreprises.errors }}</td>
+  <td> {{ form.Devis_en_attente_elabores_Particuliers }} {{ form.Devis_en_attente_elabores_Particuliers.errors }}</td>
+  <td>{{ form.Devis_en_attente_elabores_Services }} {{ form.Devis_en_attente_elabores_Services.errors }}</td>
+  <td>{{ form.Devis_en_attente_elabores_Consommables }} {{ form.Devis_en_attente_elabores_Consommables.errors }}</td>
+  <td> {{ form.Devis_en_attente_elabores_Matériel_informatique }} {{ form.Devis_en_attente_elabores_Matériel_informatique.errors }}</td>
+  <td> {{ form.Devis_en_attente_elabores_Formation }} {{ form.Devis_en_attente_elabores_Formation.errors }}</td>
+  <td>{{ form.Devis_en_attente_elabores_Statut }} {{ form.Devis_en_attente_elabores_Statut.errors }}</td>
+  <td>{{ form.Devis_en_attente_elabores_Difficultés_rencontrees }} {{ form.Devis_en_attente_elabores_Difficultés_rencontrees.errors }}</td>
+  <td>{{ form.Devis_en_attente_elabores_Raisons_e_l_echec_de_l_objectif }} {{ form.Devis_en_attente_elabores_Raisons_e_l_echec_de_l_objectif.errors }}</td>
+  <td>{{ form.Devis_en_attente_elabores_Actions_correctives }} {{ form.Devis_en_attente_elabores_Actions_correctives.errors }}</td>
+</tr>
+{% for variant in variants_data %}
+  <tr>
+  <td>{{ variant.autre_un }} {{ variant.autre_un.errors }}</td>
+  <td>{{ variant.objectifs }} {{ variant.objectifs.errors }}</td>
+  <td>{{ variant.quantites }} {{ variant.quantites.errors }}</td>
+  <td>{{ variant.Total }} {{ variant.Total.errors }}</td>
+  <td>{{ variant.acteur }} {{ variant.acteur.errors }}</td>
+  <td>{{ variant.Activites }} {{ variant.Activites.errors }}</td>
+  <td> {{ variant.Entreprises }} {{ variant.Entreprises.errors }}</td>
+  <td> {{ variant.Particuliers }} {{ variant.Particuliers.errors }}</td>
+  <td>{{ variant.Services }} {{ variant.Services.errors }}</td>
+  <td>{{ variant.Consommables }} {{ variant.Consommables.errors }}</td>
+  <td> {{ variant.materiel_informatique }} {{ variant.materiel_informatique.errors }}</td>
+  <td> {{ variant.formation }} {{ variant.formation.errors }}</td>
+  <td>{{ variant.Statut }} {{ variant.Statut.errors }}</td>
+  <td>{{ variant.Difficultes_rencontrees }} {{ variant.Difficultes_rencontrees.errors }}</td>
+  <td>{{ variant.Raisons_e_l_echec_de_l_objectif }} {{ variant.Raisons_e_l_echec_de_l_objectif.errors }}</td>
+  <td>{{ variant.Actions_correctives }} {{ variant.Actions_correctives.errors }}</td>
+</tr>
+ {% endfor %}
+</table>
+<br>
+</div>
+<br>
+<div class="col-md-12">{{ form.autre|safe }}</div>
+<br>
+</div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

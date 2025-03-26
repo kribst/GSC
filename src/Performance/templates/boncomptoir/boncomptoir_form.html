@@ -1,0 +1,523 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+
+{% block title %}GSC | Nouveau Rapport Hebdomadaire Comptable {{ rapport.titre }}{% endblock %}
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+
+{% block content %}
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+
+<script>
+tinymce.init({
+    selector: '#id_objectif, #id_autre',
+    height: 300,
+    menubar: false,
+    plugins: 'table lists', // Assurez-vous que le plugin de listes est inclus
+    toolbar: 'undo redo | styleselect | bold italic underline | fontselect fontsize | forecolor backcolor | alignleft aligncenter alignright | bullist numlist outdent indent | link image | blockquote hr | h1 h2 h3 | table | emoticons | fullscreen | customBullets | code',
+    setup: function (editor) {
+        // Ajout d'un bouton personnalisé pour les puces
+        editor.ui.registry.addButton('customBullets', {
+            text: 'Puces Personnalisées',
+            onAction: function () {
+                editor.insertContent('<ul class="custom-bullets"><li>• Exemple de puce</li><li>➔ Exemple de flèche</li><li>★ Exemple d\'étoile</li></ul>');
+            }
+        });
+    },
+    style_formats: [
+        {title: 'Titre 1', block: 'h1'},
+        {title: 'Titre 2', block: 'h2'},
+        {title: 'Titre 3', block: 'h3'},
+        {title: 'Paragraphe', block: 'p'}
+    ],
+    content_style: `
+        /* Titres */
+        h1 { font-size: 26px; font-weight: bold; margin-bottom: 16px; color: #333; }
+        h2 { font-size: 20px; font-weight: bold; margin-bottom: 14px; color: #444; }
+        h3 { font-size: 18px; font-weight: bold; margin-bottom: 12px; color: #555; }
+
+        /* Paragraphe */
+        p { font-size: 16px; line-height: 1.6; margin-bottom: 12px; color: #333; }
+
+        /* Listes personnalisées */
+        ul.custom-bullets {
+            list-style-type: none; /* Supprime les puces par défaut */
+            padding-left: 0; /* Supprime l'espacement à gauche */
+        }
+        ul.custom-bullets li:before {
+            content: '•'; /* Exemple de puce */
+            margin-right: 8px; /* Espacement à droite de la puce */
+            color: #666; /* Couleur de la puce */
+        }
+        ul.custom-bullets li.arrow:before {
+            content: '➔'; /* Flèche */
+            margin-right: 8px;
+            color: #666;
+        }
+        ul.custom-bullets li.star:before {
+            content: '★'; /* Étoile */
+            margin-right: 8px;
+            color: gold; /* Couleur de l'étoile */
+        }
+    `
+});
+</script>
+
+
+<style>
+<!--lien -->
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+<!--lien -->
+
+</style>
+
+
+<style>
+
+ .remove-ajout {
+    margin-left: 10px;
+    background-color:rgb(0, 64, 255);
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-ajout:hover {
+    background-color:rgb(0, 64, 255); /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-ajout:active {
+    background-color:rgb(255, 255, 255); /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+</style>
+
+
+<style>
+
+  table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+  }
+  th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+  }
+  th {
+      background-color: #f2f2f2;
+  }
+  tr:hover {
+      background-color: #f1f1f1;
+  }
+
+
+ .remove-variant {
+    margin-left: 10px;
+    background-color: #FF0000;
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-variant:hover {
+    background-color: #CC0000; /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-variant:active {
+    background-color: #990000; /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+</style>
+
+
+
+
+        <div class="container">
+          <div class="page-inner">
+            <div class="page-header">
+              <h3 class="fw-bold mb-3">BON COMPTOIR</h3>
+              <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <i class="fas fa-store"></i>
+                </li>
+                <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'boncomtoir_list' %}">LISTE</a>
+                </li>
+              </ul>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">CRÉER UN RAPPORT ICI</div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-12">
+
+                        <form method="post">
+                          {% csrf_token %}
+
+                          <div class="container">
+
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      {{ form.titre.label }}
+                                      {{ form.titre }}
+                                      {{ form.titre.errors }}
+                                  </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.date.label }}
+                                    {{ form.date }}
+                                    {{ form.date.errors }}
+                                </div>
+                            </div>
+
+                               <div class="row">
+                                  <div class="col-md-12">
+                                      {{ form.objectif.label }}
+                                      {{ form.objectif }}
+                                      {{ form.objectif.errors }}
+                                  </div>
+                              </div>
+
+                      <br>
+
+                              <table>
+                                <thead>
+                                    <tr>
+                                        <th>ACTIVITES</th>
+                                        <th>QUANTITES</th>
+                                        <th>QUANTITES TOTAL</th>
+                                        <th>NOMBRE DE PERSONNE(S)</th>
+                                        <th>PERSONNE EN CHARGE</th>
+                                        <th>STATUT DE LA TACHE</th>
+                                        <th>POURCENTAGE DE CHARGE INDIVIDUEL</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>CHARGEMENT DES PRODUITS DANS LE SHEEFT</th>
+
+                                        <td>
+                                            {{ form.quantite_produit }}
+                                            {{ form.quantite_produit.errors }}
+                                        </td>
+                                        <td>
+                                            {{ form.quantite_total_produit }}
+                                            {{ form.quantite_total_produit.errors }}
+                                        </td>
+                                        <td>
+                                            {{ form.nombre_personne }}
+                                            {{ form.nombre_personne.errors }}
+                                        </td>
+                                        <td>
+                                            {{ form.personne_en_charge_le_sheet }}
+                                            {{ form.personne_en_charge_le_sheet.errors }}
+                                        </td>
+
+                                        <td>
+                                            {{ form.statut_qte_produit_sheet}}
+                                            {{ form.statut_qte_produit_sheet.errors }}
+                                        </td>
+
+                                        <td>
+                                            {{ form.pourcentage_individuel_quantite_produit }}
+                                            {{ form.pourcentage_individuel_quantite_produit.errors }}
+                                        </td>
+
+
+                                    </tr>
+
+                                    <tr>
+                                      <th>IMPORTATION DES PRODUITS SUR LE SITE</th>
+                                      <td>
+                                          {{ form.quantite_importer }}
+                                          {{ form.quantite_importer.errors }}
+                                      </td>
+                                      <td>
+                                          {{ form.quantite_total_importer }}
+                                          {{ form.quantite_total_importer.errors }}
+                                      </td>
+                                        <td>
+                                          {{ form.Nombre_presonne_importer }}
+                                          {{ form.Nombre_presonne_importer.errors }}
+                                      </td>
+                                        <td>
+                                          {{ form.personne_en_charge_importer }}
+                                          {{ form.personne_en_charge_importer.errors }}
+                                      </td>
+
+                                        <td>
+                                          {{ form.statut_qte_importer_importer }}
+                                          {{ form.statut_qte_importer_importer.errors }}
+                                      </td>
+
+                                        <td>
+                                          {{ form.pourcentage_individuel_quantite_importer_importer }}
+                                          {{ form.pourcentage_individuel_quantite_importer_importer.errors }}
+                                      </td>
+
+                                  </tr>
+
+
+                                  <tr>
+                                    <th>MONTAGE DES FLYERS ET ANIMATION SUR NOS DIFFERENTES PLATEFORMES</th>
+                                    <td>
+                                        {{ form.quantite_flyers }}
+                                        {{ form.quantite_flyers.errors }}
+                                    </td>
+                                    <td>
+                                        {{ form.quantite_total_flyers }}
+                                        {{ form.quantite_total_flyers.errors }}
+                                    </td>
+                                      <td>
+                                        {{ form.Nombre_presonne_flyers }}
+                                        {{ form.Nombre_presonne_flyers.errors }}
+                                    </td>
+                                      <td>
+                                        {{ form.personne_en_charge_flyers }}
+                                        {{ form.personne_en_charge_flyers.errors }}
+                                    </td>
+
+                                      <td>
+                                        {{ form.statut_qte_importer_flyers }}
+                                        {{ form.statut_qte_importer_flyers.errors }}
+                                    </td>
+
+                                      <td>
+                                        {{ form.pourcentage_individuel_quantite_importer_flyers }}
+                                        {{ form.pourcentage_individuel_quantite_importer_flyers.errors }}
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+
+                              <br>
+                              <h2>INFORMATIONS SUPPLÉMENTAIRES (OPTIONNEL)</h2>
+                              <!-- Management form (obligatoire pour les formsets) -->
+                            {{ subcomptoirs.management_form }}
+
+                         <div class="table-responsive" id="formset-container">
+                                    {% for form in subcomptoirs %}
+                             <div class="variant-form">
+                                <table border="1">
+            <tr>
+                <td class="delete-button-cell"><button type="button" class="remove-variant" style="padding: 4px 8px;">Supprimer</button></td>
+                <th>{{ form.activite.label }}{{ form.activite }}{{ form.activite.errors }}</th>
+                <td>{{ form.quantite.label }}{{ form.quantite }}{{ form.quantite.errors }}</td>
+                <td>{{ form.quantite_total.label }}{{ form.quantite_total }}{{ form.quantite_total.errors }}</td>
+                <td> {{ form.Nombre_de_personne.label }}{{ form.Nombre_de_personne }}{{ form.Nombre_de_personne.errors }}</td>
+                <td> {{ form.personne_en_charge.label }}{{ form.personne_en_charge }}{{ form.personne_en_charge.errors }}</td>
+                <td>{{ form.statut.label }}{{ form.statut }}{{ form.statut.errors }}</td>
+                <td>{{ form.pourcentage_de_charge_individuel.label }}{{ form.pourcentage_de_charge_individuel }}{{ form.pourcentage_de_charge_individuel.errors }}</td>
+
+            </tr>
+        </table>
+        <div style="display:none;">
+          {{ form.DELETE }}
+        </div>
+                             </div>
+                                    {% endfor %}
+                                </div>
+                               <br>
+                        <button type="button" id="add-variant" class="remove-ajout">➕ AJOUTER UNE LIGNE</button>
+        <br>
+
+
+<!-- ✅ Script JavaScript -->
+<script>
+ document.addEventListener("DOMContentLoaded", function() {
+    const variantForms = document.querySelectorAll(".variant-form");
+    const addVariantBtn = document.getElementById("add-variant");
+
+    function updateVisibleForm() {
+        let visibleFormFound = false;
+        variantForms.forEach(form => {
+            if (!visibleFormFound && hasUserInput(form)) {
+                form.style.display = "block";
+                visibleFormFound = true;
+            } else {
+                form.style.display = "none";
+            }
+        });
+    }
+
+    function hasUserInput(form) {
+        return Array.from(form.querySelectorAll("input, select, textarea")).some(field => {
+            return field.type !== "hidden" && field.value.trim() !== "";
+        });
+    }
+
+    function showHiddenForm() {
+        for (let i = 0; i < variantForms.length; i++) {
+            if (variantForms[i].style.display === "none") {
+                variantForms[i].style.display = "block";
+                return;
+            }
+        }
+    }
+
+    function removeVariantForm(event) {
+        if (event.target && event.target.classList.contains("remove-variant")) {
+            const variantForm = event.target.closest(".variant-form");
+            const deleteField = variantForm.querySelector("input[type='checkbox'][name$='-DELETE']");
+
+            if (deleteField) {
+                deleteField.checked = true;
+            }
+
+            variantForm.querySelectorAll("input, select, textarea").forEach(field => {
+                field.value = "";
+                if (field.tagName === "SELECT") {
+                    field.selectedIndex = 0;
+                }
+            });
+
+            variantForm.style.display = "none";
+        }
+    }
+
+    addVariantBtn.addEventListener("click", showHiddenForm);
+    document.addEventListener("click", removeVariantForm);
+    updateVisibleForm();
+});
+
+</script>
+        <br>
+
+
+
+
+                              <div class="row">
+                                <div class="col-md-12">
+                                    {{ form.autre.label }}
+                                    {{ form.autre }}
+                                    {{ form.autre.errors }}
+                                </div>
+                            </div>
+
+
+                              <br>
+
+                               <div class="card-action" style="display: flex; justify-content: flex-end;">
+                                            <button class="remove-ajout" style="margin-left: 10px; border-radius: 6px; padding: 8px 30px;" type="submit">Enregistrer</button>
+                                            <a href="{% url 'liste_comptabilite' %}" class="remove-variant" style="margin-left: 10px; background-color: #FF0000; color: rgb(238, 233, 233); border-radius: 6px;padding: 8px 30px;">Annuler</a>
+                                        </div>
+                          </div>
+                      </form>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+{% endblock %}

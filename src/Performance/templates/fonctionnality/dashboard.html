@@ -1,0 +1,421 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block content %}
+
+<style>
+.link-hover {
+    position: relative;
+    display: inline-block;
+    user-select: none; /* Empêche la sélection de texte */
+}
+
+.link-hover::after {
+    content: attr(title); /* Utilise le texte de l'attribut title */
+    position: absolute;
+    bottom: 100%; /* Positionne le tooltip au-dessus du texte */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px;
+    background-color: #333; /* Couleur de fond du tooltip */
+    color: #fff; /* Couleur du texte */
+    border-radius: 5px;
+    white-space: nowrap; /* Empêche le texte de se diviser en plusieurs lignes */
+    opacity: 0; /* Rend le tooltip invisible par défaut */
+    transition: opacity 0.3s; /* Animation de transition */
+    pointer-events: none; /* Empêche le tooltip de bloquer les événements de souris */
+}
+
+.link-hover:hover::after {
+    opacity: 1; /* Affiche le tooltip au survol */
+}
+
+.non-selectable {
+    user-select: none; /* Empêche la sélection de texte */
+    -webkit-user-select: none; /* Pour Safari */
+    -moz-user-select: none; /* Pour Firefox */
+    -ms-user-select: none; /* Pour Internet Explorer/Edge */
+}
+</style>
+
+
+
+
+
+
+<style>
+        .clignotant {
+            font-weight: bold;
+            color: red;
+            animation: clignote 1.5s infinite;
+            text-align: center;
+        }
+
+        @keyframes clignote {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+</style>
+
+
+  <div class="container">
+          <div class="page-inner">
+            <div
+              class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+            >
+              <div>
+                <h3 class="fw-bold mb-3 non-selectable">TOTAL</h3>
+              </div>
+            </div>
+<!-- Card With Icon States Color -->
+            <div class="row">
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-5">
+                        <div class="icon-big text-center">
+                          <a href="{% url 'boncomptoir_create' %}">
+                          <i class="fas fa-store" style="color: #e40a14"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-7 col-stats">
+                        <div class="numbers" style="text-align: center;">
+                          <p class="card-category non-selectable">BON COMPTOIR</p>
+                          <h4 class="card-title non-selectable"><a href="{% url 'boncomtoir_list' %}">{{ total_rap_bc }}</a></h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-5">
+                        <div class="icon-big text-center">
+                          <a href="{% url 'ajouter_comptabilite' %}">
+                          <i class="fas fa-calculator" style="color: #06e00d"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-7 col-stats">
+                        <div class="numbers" style="text-align: center;">
+                          <p class="card-category non-selectable">COMPTABILITÉ</p>
+                          <h4 class="card-title non-selectable"><a href="{% url 'liste_comptabilite' %}">{{ total_rap_comta }}</a></h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-5">
+                        <div class="icon-big text-center">
+                          <a href="{% url 'technique_create' %}">
+                          <i class="fa fa-cogs" style="color: #1404a8"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-7 col-stats">
+                        <div class="numbers" style="text-align: center;">
+                          <p class="card-category non-selectable">TECHNIQUE</p>
+                          <h4 class="card-title non-selectable"><a href="{% url 'listTechnique' %}">{{ total_rap_Technique }}</a></h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-5">
+                        <div class="icon-big text-center">
+                          <a href="{% url 'create_marqueting' %}">
+                          <i class="far fa-chart-bar" style="color: #e805f4;"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-7 col-stats">
+                        <div class="numbers" style="text-align: center;">
+                          <p class="card-category non-selectable">MARKETING</p>
+                          <h4 class="card-title non-selectable"><a href="{% url 'marqueting_list' %}">{{ total_rap_Marqueting }}</a></h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+            <div class="container mt-5">
+              <div class="row">
+
+            <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title non-selectable">Taux de réalisation de la semaine précédente</div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas
+                        id="boncomptoir"
+                        style="width: 50%; height: 50%"
+                      ></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+           <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title non-selectable">Taux de réalisation de la semaine antérieure</div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas
+                        id="doughnutChart"
+                        style="width: 50%; height: 50%"
+                      ></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+              </div>
+          </div>
+
+
+<script>
+var boncomptoir = document.getElementById("boncomptoir").getContext("2d");
+
+var myboncomptoir = new Chart(boncomptoir, {
+  type: "pie",
+  data: {
+    datasets: [
+      {
+        data: [{{ dernier_rap_bc.pourcentage_total }}, {{ dernier_rap_comta.pourcentage_global }}, {{ dernier_rap_marqueting.pourcentage_global }}, {{ dernier_rap_technique.Pourcentage_Total }}],
+        backgroundColor: ["#e40a14", "#06e00d", "#e805f4", "#1404a8"],
+        borderWidth: 0,
+      },
+    ],
+    labels: ["Bon Comptoir","Comptabilité","Marketing", "Technique"],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          color: "rgb(154, 154, 154)",
+          font: {
+            size: 11,
+          },
+          usePointStyle: true,
+          padding: 20,
+        },
+      },
+    },
+    pieceLabel: {
+      render: "percentage",
+      fontColor: "white",
+      fontSize: 14,
+    },
+    tooltips: false,
+    layout: {
+      padding: {
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: 20,
+      },
+    },
+  },
+});
+
+</script>
+
+
+
+
+<script>
+var doughnutChart = document
+  .getElementById("doughnutChart")
+  .getContext("2d");
+var myDoughnutChart = new Chart(doughnutChart, {
+  type: "doughnut",
+  data: {
+    labels: ["Bon Comptoir", "Comptabilité", "Marketing", "Technique"],
+    datasets: [
+      {
+        label: "Taux de réalisation: ",
+        data: [{{ avant_dernier_bc.pourcentage_total }}, {{ avant_dernier_co.pourcentage_global }}, {{ avant_dernier_ma.pourcentage_global }}, {{ avant_dernier_tec.Pourcentage_Total }}],
+        backgroundColor: [
+          "#e40a14",
+          "#06e00d",
+          "#e805f4",
+          "#1404a8",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: "bottom", // ✅ Permet d'afficher les labels en bas
+      },
+    },
+  },
+});
+
+</script>
+
+
+
+
+
+
+
+
+
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card card-round">
+                  <div class="card-body">
+                    <div class="card-head-row card-tools-still-right">
+                      <div class="card-title non-selectable">Derniers Utilisateurs Connectés</div>
+                    </div>
+                    <div class="card-list py-4">
+                      {% for utilisateur in utilisateurs %}
+                      <div class="item-list">
+                        <div class="avatar">
+                          {% if utilisateur.image %}
+                              <img src="{{ utilisateur.image.url }}" class="avatar-img rounded-circle">
+                          {% else %}
+                              <img src="{% static 'dashboard/assets/img/profile.jpg' %}" class="avatar-img rounded-circle non-selectable">
+                          {% endif %}
+                        </div>
+                        <div class="info-user ms-3">
+                          <div class="username non-selectable">{{ utilisateur.first_name }} {{ utilisateur.last_name }}</div>
+                          <div class="status non-selectable">{{ utilisateur.poste|default:"Non renseigné" }}</div>
+                        </div>
+                        <div class="info-user ms-3">
+                          <div class="status non-selectable">{{ utilisateur.last_login|date:"d/m/Y H:i:s" }}</div>
+                        </div>
+                      </div>
+                      {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center non-selectable">Aucun utilisateur récemment connecté.</td>
+                        </tr>
+                        {% endfor %}
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="col-md-8">
+                <div class="card card-round">
+                  <div class="card-header">
+                    <div class="card-head-row card-tools-still-right">
+                      <div class="card-title non-selectable">Liste Des Derniers Rapports</div>
+                    </div>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <!-- Projects table -->
+                      <table class="table align-items-center mb-0">
+                        <thead class="thead-light">
+                          <tr>
+                            <th scope="col non-selectable">Titres</th>
+                            <th scope="col" class="text-end non-selectable">Date De Publication</th>
+                            <th scope="col" class="text-end non-selectable">Départements/Autres</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for rapport in rapports %}
+                          {% if rapport.rapport %}  {# Vérifie si le rapport existe #}
+                              <tr>
+                                  <th scope="row"{% if rapport.rapport.titre|length > 40 %} class='masquer' {% endif %}>
+                                      <a class="link-hover" href="{{ rapport.url }}" style="color: #212529;"  title="{{ rapport.rapport.titre }}">
+                                          {{ rapport.rapport.titre|truncatechars:30 }}
+                                      </a>
+                                  </th>
+                                  <td class="text-end non-selectable">{{ rapport.rapport.date|date:"d F Y à H:i" }}</td>
+                                  <td class="text-end non-selectable" style="text-align: center">{{ rapport.type }}</td>
+                              </tr>
+                          {% endif %}
+                      {% empty %}
+                          <p class="clignotant non-selectable">Aucun rapport trouvé.</p>
+                      {% endfor %}
+
+
+
+
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+       
+{% endblock %}

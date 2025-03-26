@@ -1,0 +1,380 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+
+{% block title %}GSC | Nouveau Rapport Hebdomadaire Comptable {{ rapport.titre }}{% endblock %}
+
+
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+
+{% block content %}
+
+
+
+<style>
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+th {
+    background-color:rgb(32, 108, 196);
+    color: black;
+
+.blue{
+    background-color: #4A90E2;
+    color: white;
+}
+.category {
+    background-color: #B0D4F1;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 10px;
+    color: red;
+}
+.light-blue {
+    background-color: #D6EBFF;
+}
+.center {
+    text-align: center;
+}
+.bold {
+    font-weight: bold;
+}
+.underline {
+    text-decoration: underline;
+}
+
+</style>
+
+
+
+
+
+
+
+
+<style>
+<!--lien -->
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+<!--lien -->
+
+</style>
+
+<style>
+        .box {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid green;
+            border-radius: 10px;
+        }
+
+        .text {
+            font-size: 32px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            color: darkred;
+            text-shadow: 2px 2px 0 blue, -2px -2px 0 red;
+        }
+
+
+      
+    </style>
+
+
+
+        <div class="container">
+          <div class="page-inner">
+            <div class="page-header">
+              <h3 class="fw-bold mb-3">RAPPORT HEBDOMADAIRE DU DÉPARTEMENT TECHNIQUE</h3>
+              <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <i class="fa fa-cogs"></i>
+                </li>
+                <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'technique_create' %}">NOUVEAU RAPPPORT</a>
+                </li>
+                  <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'technique_update' technique.pk %}">MODIFIER</a>
+                </li>
+                <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                  <li class="nav-item">
+                  <a href="{% url 'deleteTechnique' technique.pk %}">SUPPRIMER</a>
+                </li>
+                  <li class="separator">
+                  <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'listTechnique' %}">LISTE</a>
+                </li>
+              </ul>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">
+                        <div class="d-flex align-items-center">
+                      <h4 class="card-title">TÉLÉCHARGER CE RAPPORT MAINTENANT !</h4>
+                      <a class="btn btn btn-round ms-auto" style="background-color: rgb(11, 163, 47); color: white; background-color: darkgreen;"  href="{% url 'export_Techniques_pdf' technique.id %}">
+                            <i class="fa fa-download"></i> Télécharger
+                        </a>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-12">
+
+
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <br>
+         <br>
+           <div class="box">
+                <span class="text">DEPARTEMENT TECHNIQUE</span>
+            </div>
+        <br>
+        <br>
+          <h5 style="text-align: center; font-size: 2em; text-decoration: underline;">{{ rapport_date }}</h5>
+  
+    </header>
+
+    <section>
+       <div class="table-responsive">
+
+                                <table>
+                                  <tr>
+                                      <th rowspan="{{ rowspan_externe }}" style="background-color: rgb(32, 108, 196); color: red; font-weight: bold;">ACTIVITÉS EXTERNES</th>
+                                      <th>Sites/Clients</th>
+                                      <th>Actions</th>
+                                      <th>Résultats</th>
+                                      <th>Observations/Remarques</th>
+                                      <th>Statuts</th>
+                                      <th>Facturation/Paiement</th>
+                                      <th>Intervenants</th>
+                                  </tr>
+                                 
+                                  <tr>
+                                      <td style="background-color:rgb(147, 187, 232);">{{ technique.clients_externe }}</td>
+                                      <td style="background-color:rgb(147, 187, 232);">{{ technique.action_externe }}</td>
+                                      <td style="background-color:rgb(147, 187, 232);">{{ technique.resultats_externe }}</td>
+                                      <td style="background-color:rgb(147, 187, 232);">{{ technique.remarque_externe }}</td>
+                                      <td style="background-color:rgb(147, 187, 232);">{{ technique.statuts_externe }}</td>
+                                      <td style="background-color:rgb(147, 187, 232);">{{ technique.paiement_externe }}</td>
+                                      <td style="background-color:rgb(147, 187, 232);">{{ technique.intervenant_externe.all|join:", " }}</td>
+                                  </tr>
+                                  {% for activite in activites_externes %}
+                                    {% if activite.ext_clients and activite.ext_action %}
+                                  <tr>
+                                    <td style="background-color:rgb(147, 187, 232);">{{ activite.ext_clients }}</td>
+                                    <td style="background-color:rgb(147, 187, 232);">{{ activite.ext_action }}</td>
+                                    <td style="background-color:rgb(147, 187, 232);">{{ activite.ext_resultats }}</td>
+                                    <td style="background-color:rgb(147, 187, 232);">{{ activite.ext_remarque }}</td>
+                                    <td style="background-color:rgb(147, 187, 232);">{{ activite.ext_statuts }}</td>
+                                    <td style="background-color:rgb(147, 187, 232);">{{ activite.ext_paiement }}</td>
+                                    <td style="background-color:rgb(147, 187, 232);">{{ activite.ext_intervenant.all|join:", " }}</td>
+                                      {% endif %}
+                                </tr>
+                                {% endfor %}
+                              
+                                  <tr>
+                                      <th rowspan="{{ rowspan_interne }}" style="background-color: rgb(32, 108, 196); color: red; font-weight: bold;" class="category">ACTIVITÉS INTERNES</th>
+                                      <td style="background-color: #B0D4F1;">{{ technique.clients_interne }}</td>
+                                      <td style="background-color: #B0D4F1;">{{ technique.action_interne }}</td>
+                                      <td style="background-color: #B0D4F1;">{{ technique.resultats_interne }}</td>
+                                      <td style="background-color: #B0D4F1;">{{ technique.remarque_interne }}</td>
+                                      <td style="background-color: #B0D4F1;">{{ technique.statuts_interne }}</td>
+                                      <td style="background-color: #B0D4F1;">{{ technique.paiement_interne }}</td>
+                                      <td style="background-color: #B0D4F1;">{{ technique.intervenant_interne.all|join:", " }}</td>
+                                  </tr>
+                                  
+                                     {% for activite in activites_internes %}
+                                    {% if activite.int_clients and activite.int_action %}
+                                  <tr>
+                                    <td style="background-color:#B0D4F1;">{{ activite.int_clients }}</td>
+                                    <td style="background-color:#B0D4F1;">{{ activite.int_action }}</td>
+                                    <td style="background-color:#B0D4F1;">{{ activite.int_resultats }}</td>
+                                    <td style="background-color:#B0D4F1;">{{ activite.int_remarque }}</td>
+                                    <td style="background-color:#B0D4F1;">{{ activite.int_statuts }}</td>
+                                    <td style="background-color:#B0D4F1;">{{ activite.int_paiement }}</td>
+                                    <td style="background-color:#B0D4F1;">{{ activite.int_intervenant.all|join:", " }}</td>
+                                      {% endif %}
+                                </tr>
+                                    {% endfor %}
+
+
+                              </table>
+                                        </div>
+
+                                        <br>
+             <div>
+                  <h5 style="text-align: center; font-size: 2em; text-decoration: underline;">STATISTIQUES SOMMAIRES DES ACTIVITES</h5>
+              </div>
+              <br>
+
+
+              <div class="table-responsive">
+
+                <table border="1">
+                  <tr>
+                      <th style="background-color: rgb(32, 108, 196); color: red; font-weight: bold;"></th>
+                      <th>Nombres interventions</th>
+                      <th>Intervention en attente</th>
+                      <th>Pourcentage de Réalisation</th>
+                      <th>Facturation/Paiement Soldé</th>
+                  </tr>
+                 
+                  <tr>
+                      <th rowspan="2" class="fusion" style="background-color: rgb(32, 108, 196); color: red; font-weight: bold;">ACTIVITES EXTERNES</th>
+                      <td style="background-color:rgb(108, 163, 225);">{{ technique.nombres_interventions_externe }}</td>
+                      <td style="background-color:rgb(108, 163, 225);">{{ technique.Intervention_en_attente_externe }} ({{ technique.liste }})</td>
+                      <td style="background-color:rgb(108, 163, 225);">{% if technique.Pourcentage_de_Realisation_externe %}
+                                    {{ technique.Pourcentage_de_Realisation_externe }} %
+                                {% else %}
+                                    RAS
+                                {% endif %}
+                       </td>
+                      <td style="background-color:rgb(108, 163, 225);">{{ technique.Facturation_Paiement_externe }}</td>
+                  </tr>
+
+                  <tr>
+                    <td style="background-color:rgb(224, 234, 243); font-weight: bold;">{{ technique.champ_un }}</td>
+                      <td style="background-color:rgb(224, 234, 243); font-weight: bold;">{{ technique.champ_deux }}</td>
+                      <td style="background-color:rgb(224, 234, 243); font-weight: bold;">{{ technique.champ_trois }}</td>
+                      <td style="background-color:rgb(224, 234, 243); font-weight: bold;">{{ technique.champ_quatre }}</td>
+                </tr>
+
+                  <tr>
+                      <th style="background-color: rgb(32, 108, 196); color: red; font-weight: bold;" class="category">ACTIVITÉS INTERNES</th>
+                      <td style="background-color: #B0D4F1;">{{ technique.Laptops_Entree }}</td>
+                      <td style="background-color: #B0D4F1;">{{ technique.Laptop_en_Attente }}</td>
+                      <td style="background-color: #B0D4F1;">{% if technique.Pourcentage_de_Realisation_interne %}
+                                    {{ technique.Pourcentage_de_Realisation_interne }} %
+                                {% else %}
+                                    RAS
+                                {% endif %}</td>
+                      <td style="background-color: #B0D4F1;">{{ technique.Facturation_Paiement }}</td>
+                  </tr>
+              </table>
+                        </div>
+        <br>
+     <div class="row">
+                                <div class="col-md-12">
+                                   {% if technique.autre %}
+                                    {{ technique.autre|safe }}
+                                {% else %}
+                                    <!-- Ne rien afficher si c'est None -->
+                                {% endif %}
+                                </div>
+                            </div>
+
+                                        <br>
+    </section>
+    <br> <br> <br> <br> <br> <br>
+</div>
+
+
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+{% endblock %}

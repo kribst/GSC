@@ -1,0 +1,578 @@
+<!--{% extends "fonctionnality/main.html" %}-->
+<!--{% load static %}-->
+
+<!--{% block title %}GSC | Rapport: {{ rapport.titre }}{% endblock %}-->
+
+<!--{% block content %}-->
+
+<!--<script src="{% static 'tinymce/tinymce.min.js' %}"></script>-->
+<!--<script>-->
+<!--  tinymce.init({-->
+<!--    selector: '#id_objectif',  // Sélecteur pour le champ 'objectif'-->
+<!--    height: 300,-->
+<!--    menubar: false,-->
+<!--    plugins: 'lists link image preview',-->
+<!--    toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',-->
+<!--  });-->
+<!--</script>-->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="{% static 'home/assets/img/logo1.png' %}" rel="icon">
+  <link href="{% static 'home/assets/img/logo1.png' %}" rel="apple-touch-icon">
+    <!-- Fonts and icons -->
+    <script src="{% static 'dashboard/assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["{% static 'dashboard/assets/css/fonts.min.css' %}"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'dashboard/assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'dashboard/assets/css/plugins.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'dashboard/assets/css/kaiadmin.min.css' %}" />
+    {% block style %}
+    {% endblock %}
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'dashboard/assets/css/demo.css' %}" />
+
+<!--     <style>-->
+<!--    /* CSS du loader */-->
+<!--    .loader {-->
+<!--        border: 16px solidrgb(33, 18, 18);-->
+<!--        border-top: 16px solid #3498db;-->
+<!--        border-radius: 50%;-->
+<!--        width: 60px;-->
+<!--        height: 60px;-->
+<!--        animation: spin 2s linear infinite;-->
+<!--        position: fixed;-->
+<!--        left: 50%;-->
+<!--        top: 50%;-->
+<!--        transform: translate(-50%, -50%);-->
+<!--        z-index: 1000;-->
+<!--    }-->
+
+<!--    @keyframes spin {-->
+<!--        0% { transform: rotate(0deg); }-->
+<!--        100% { transform: rotate(360deg); }-->
+<!--    }-->
+
+<!--    .hidden {-->
+<!--        display: none;-->
+<!--    }-->
+<!--  </style>-->
+
+  </head>
+  <body>
+
+
+<style>
+  table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+  }
+  th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+  }
+
+
+  /* Styles pour le format A4 */
+  .a4-container {
+      width: 100%; /* Utiliser 100% pour permettre à la div de s'ajuster */
+      max-width: 210mm; /* Limiter à la largeur A4 */
+      height: auto; /* Hauteur automatique pour le contenu */
+      border: 5px solid #333; /* Bordure sombre */
+      padding: 20px; /* Espacement intérieur */
+      margin: 20px auto; /* Centrer horizontalement avec un espace en haut et en bas */
+      box-shadow: 0 0 10px rgba(0,0,0,0.5); /* Ombre discrète */
+      background-color: #fff; /* Couleur de fond */
+      border-radius: 5px; /* Coins arrondis */
+  }
+
+  /* Media query pour les écrans plus petits */
+  @media (max-width: 768px) {
+      .a4-container {
+          margin: 10px; /* Réduire les marges sur les petits écrans */
+          padding: 15px; /* Réduire le padding */
+      }
+  }
+</style>
+
+<div class="container">
+  <div class="page-inner">
+    <div class="page-header">
+      <h3 class="fw-bold mb-3">RAPPORT COMPTABLE HEBDOMADAIRE</h3>
+      <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+          <a>
+            <i class="fas fa-calculator"></i>
+          </a>
+        </li>
+        <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'ajouter_comptabilite' %}">Nouveau Rapport</a>
+        </li>
+        <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'liste_comptabilite' %}">Voir l'ensemble</a>
+        </li>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header">
+                    <div class="d-flex align-items-center">
+                      <h4 class="card-title">TÉLÉCHARGEZ CE RAPPORT MAINTENANT !</h4>
+                      <a class="btn btn btn-round ms-auto" style="background-color: rgb(11, 163, 47); color: white; background-color: darkgreen;" href="{% url 'export_to_word' form.id %}">
+                            <i class="fa fa-download"></i> Télécharger
+                        </a>
+
+
+                    </div>
+            </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+
+                <div class="a4-container">
+                  <!-- Contenu du rapport ici -->
+                  <br>
+                  <br>
+                  <br>
+                  <h1 style="text-align: center; text-decoration: underline;">Rapport d'activité Hebdomadaire</h1>
+                  <br>
+                  <br>
+                  <h3 style="text-align: center; text-decoration: underline;">Département: Comptabilité </h3>
+                  <br>
+                  <br>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-1"></div>
+                      <div class="col-md-11">
+                        <h5>Semaine: du <span style="font-weight: bold;">{{ start_date }} au {{ end_date }}</span></h5>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <h3 style="text-align: center; text-decoration: underline;">Objectifs de la semaine:</h3>
+                  <br>
+                  <br>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-1"></div>
+
+         <div style="white-space: normal; overflow-wrap: break-word; word-wrap: break-word; padding-left: 40px; margin: 0; font-size: 1.4em; text-align: center;">
+          <style>
+            ul, ol {
+              margin: 0;
+              padding: 0;
+              list-style-position: inside;
+              display: inline-block; /* Permet de centrer la liste */
+              text-align: left; /* Pour garder le texte de la liste aligné à gauche */
+            }
+          </style>
+          {{ form.objectif|safe }}
+        </div>
+
+
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <h3 style="text-align: center; text-decoration: underline;">Activités et réalisations:</h3>
+                  <br>
+                  <br>
+                  <div>
+                    <table>
+                      <thead>
+                          <tr>
+                              <th>ELEMENTS</th>
+                              <th>QUANTITES</th>
+                              <th>STATUTS/DETAILS</th>
+                              <th>POURCENTAGE</th>
+
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <th>Factures établies</th>
+                              <td>
+                                  {{ quantite_Facture_etablies }}
+                                  {{ quantite_Facture_etablies.errors }}
+                              </td>
+                              <td>
+                                  {{ statut_Facture_etablies }}
+                                  {{ statut_Facture_etablies.errors }}
+                              </td>
+                              <td>
+                                  {{ total_Facture_etablies }}
+                                  {{ total_Facture_etablies.errors }}
+                              </td>
+
+                          </tr>
+
+                          <tr>
+                            <th>Dévis</th>
+                            <td>
+                              {{ form.quantite_Devis.label }}
+                              {{ form.quantite_Devis}}
+                              {{ form.quantite_Devis.errors }}
+                          </td>
+                          <td>
+                              {{ form.statut_Devis.label }}
+                              {{ form.statut_Devis}}
+                              {{ form.statut_Devis.errors }}
+                          </td>
+                            <td>
+                                {{ form.total_Devis.label }}
+                                {{ form.Devis }}
+                                {{ form.total_Devis }}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                          <th>Demande de cotation</th>
+                          <td>
+                              {{ form.quantite_Demande_de_cotation.label }}
+                              {{ form.quantite_Demande_de_cotation}}
+                              {{ form.quantite_Demande_de_cotation.errors }}
+                          </td>
+                          <td>
+                              {{ form.statut_Demande_de_cotation.label }}
+                              {{ form.statut_Demande_de_cotation}}
+                              {{ form.statut_Demande_de_cotation.errors }}
+                          </td>
+                          <td>
+                              {{ form.total_Demande_de_cotation.label }}
+                              {{ form.Demande_de_cotation }}
+                              {{ form.total_Demande_de_cotation }}
+                          </td>
+
+                      </tr>
+
+
+                      <tr>
+                        <th>Livraison / Expedition</th>
+                        <td>
+                            {{ form.quantite_Livraison_Expedition.label }}
+                            {{ form.quantite_Livraison_Expedition }}
+                            {{ form.quantite_Livraison_Expedition.errors }}
+                        </td>
+                        <td>
+                          {{ form.statut_Livraison_Expedition.label }}
+                          {{ form.statut_Livraison_Expedition }}
+                          {{ form.statut_Livraison_Expedition.errors }}
+                      </td>
+                        <td>
+                            {{ form.total_Livraison_Expedition.label }}
+                            {{ form.Livraison_Expedition }}
+                            {{ form.total_Livraison_Expedition }}
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                      <th>Cheques recus</th>
+                      <td>
+                          {{ form.quantite_Cheques_recus.label }}
+                          {{ form.quantite_Cheques_recus }}
+                          {{ form.quantite_Cheques_recus.errors }}
+                      </td>
+                      <td>
+                          {{ form.statut_Cheques_recus.label }}
+                          {{ form.statut_Cheques_recus }}
+                          {{ form.statut_Cheques_recus.errors }}
+                      </td>
+                      <td>
+                          {{ form.total_Cheques_recus.label }}
+                          {{ form.Cheques_recus }}
+                          {{ form.total_Cheques_recus }}
+                      </td>
+
+                  </tr>
+
+
+                  <tr>
+                    <th>Depots chèques</th>
+                    <td>
+                        {{ form.quantite_Depots_cheques.label }}
+                        {{ form.quantite_Depots_cheques }}
+                        {{ form.quantite_Depots_cheques.errors }}
+                    </td>
+                    <td>
+                      {{ form.statut_Depots_cheques.label }}
+                      {{ form.statut_Depots_cheques }}
+                      {{ form.statut_Depots_cheques.errors }}
+                  </td>
+                    <td>
+                        {{ form.total_Depots_cheques.label }}
+                        {{ form.Depots_cheques }}
+                        {{ form.total_Depots_cheques }}
+                    </td>
+
+                </tr>
+
+              <tr>
+                <th>Bon de Commande</th>
+                <td>
+                    {{ form.quantite_Bon_de_Commande.label }}
+                    {{ form.quantite_Bon_de_Commande }}
+                    {{ form.quantite_Bon_de_Commande.errors }}
+                </td>
+                <td>
+                  {{ form.statut_Bon_de_Commande.label }}
+                  {{ form.statut_Bon_de_Commande }}
+                  {{ form.statut_Bon_de_Commande.errors }}
+              </td>
+                <td>
+                    {{ form.total_Bon_de_Commande.label }}
+                    {{ form.Bon_de_Commande }}
+                    {{ form.total_Bon_de_Commande }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+              <th>Recouvrements creances</th>
+              <td>
+                  {{ form.quantite_Recouvrements_creances.label }}
+                  {{ form.quantite_Recouvrements_creances }}
+                  {{ form.quantite_Recouvrements_creances.errors }}
+              </td>
+              <td>
+                  {{ form.statut_Recouvrements_creances.label }}
+                  {{ form.statut_Recouvrements_creances }}
+                  {{ form.statut_Recouvrements_creances.errors }}
+              </td>
+              <td>
+                  {{ form.total_Recouvrements_creances.label }}
+                  {{ form.Recouvrements_creances }}
+                  {{ form.total_Recouvrements_creances }}
+              </td>
+
+          </tr>
+
+
+          <tr>
+            <th>Recharge carte UBA</th>
+            <td>
+                {{ form.quantite_Recharge_carte_UBA.label }}
+                {{ form.quantite_Recharge_carte_UBA }}
+                {{ form.quantite_Recharge_carte_UBA.errors }}
+            </td>
+            <td>
+              {{ form.statut_Recharge_carte_UBA.label }}
+              {{ form.statut_Recharge_carte_UBA }}
+              {{ form.statut_Recharge_carte_UBA.errors }}
+          </td>
+            <td>
+                {{ form.total_Recharge_carte_UBA.label }}
+                {{ form.Recharge_carte_UBA }}
+                {{ form.total_Recharge_carte_UBA }}
+            </td>
+
+        </tr>
+
+        <tr>
+          <th>Recharge carte ACCESS</th>
+          <td>
+              {{ form.quantite_Recharge_carte_ACCESS.label }}
+              {{ form.quantite_Recharge_carte_ACCESS }}
+              {{ form.quantite_Recharge_carte_ACCESS.errors }}
+          </td>
+          <td>
+              {{ form.statut_Recharge_carte_ACCESS.label }}
+              {{ form.statut_Recharge_carte_ACCESS }}
+              {{ form.statut_Recharge_carte_ACCESS.errors }}
+          </td>
+          <td>
+              {{ form.total_Recharge_carte_ACCESS.label }}
+              {{ form.Recharge_carte_ACCESS }}
+              {{ form.total_Recharge_carte_ACCESS }}
+          </td>
+
+      </tr>
+
+
+      <tr>
+        <th>Receptions mails</th>
+        <td>
+            {{ form.quantite_Receptions_mails.label }}
+            {{ form.quantite_Receptions_mails }}
+            {{ form.quantite_Receptions_mails.errors }}
+        </td>
+        <td>
+          {{ form.statut_Receptions_mails.label }}
+          {{ form.statut_Receptions_mails }}
+          {{ form.statut_Receptions_mails.errors }}
+      </td>
+        <td>
+            {{ form.total_Receptions_mails.label }}
+            {{ form.Receptions_mails }}
+            {{ form.total_Receptions_mails }}
+        </td>
+
+    </tr>
+
+
+    <tr>
+      <th>Mails envoyé(s)</th>
+      <td>
+          {{ form.quantite_Mails_envoyes.label }}
+          {{ form.quantite_Mails_envoyes }}
+          {{ form.quantite_Mails_envoyes.errors }}
+      </td>
+      <td>
+          {{ form.statut_Mails_envoyes.label }}
+          {{ form.statut_Mails_envoyes }}
+          {{ form.statut_Mails_envoyes.errors }}
+      </td>
+      <td>
+          {{ form.total_Mails_envoyes.label }}
+          {{ form.Mails_envoyes }}
+          {{ form.total_Mails_envoyes }}
+      </td>
+
+  </tr>
+
+
+  <tr>
+    <th>Saisir ecritures logiciel Sage 17</th>
+    <td>
+        {{ form.quantite_Saisir_ecritures_logiciel_Sage.label }}
+        {{ form.quantite_Saisir_ecritures_logiciel_Sage }}
+        {{ form.quantite_Saisir_ecritures_logiciel_Sage.errors }}
+    </td>
+    <td>
+      {{ form.statut_Saisir_ecritures_logiciel_Sage.label }}
+      {{ form.statut_Saisir_ecritures_logiciel_Sage }}
+      {{ form.statut_Saisir_ecritures_logiciel_Sage.errors }}
+  </td>
+    <td>
+        {{ form.total_Saisir_ecritures_logiciel_Sage.label }}
+        {{ form.Saisir_ecritures_logiciel_Sage }}
+        {{ form.total_Saisir_ecritures_logiciel_Sage }}
+    </td>
+
+</tr>
+
+
+<tr>
+  <th>Téldéclaration impot</th>
+  <td>
+      {{ form.quantite_Teledeclaration_impot.label }}
+      {{ form.quantite_Teledeclaration_impot }}
+      {{ form.quantite_Teledeclaration_impot.errors }}
+  </td>
+  <td>
+      {{ form.statut_Teledeclaration_impot.label }}
+      {{ form.statut_Teledeclaration_impot }}
+      {{ form.statut_Teledeclaration_impot.errors }}
+  </td>
+  <td>
+      {{ form.total_Teledeclaration_impot.label }}
+      {{ form.Teledeclaration_impot }}
+      {{ form.total_Teledeclaration_impot }}
+  </td>
+
+</tr>
+
+
+
+<tr>
+<th>Paiement impot</th>
+<td>
+  {{ form.quantite_Paiement_impot.label }}
+  {{ form.quantite_Paiement_impot }}
+  {{ form.quantite_Paiement_impot.errors }}
+</td>
+<td>
+  {{ form.statut_Paiement_impot.label }}
+  {{ form.statut_Paiement_impot }}
+  {{ form.statut_Paiement_impot.errors }}
+</td>
+<td>
+  {{ form.total_Paiement_impot.label }}
+  {{ form.Paiement_impot }}
+  {{ form.total_Paiement_impot }}
+</td>
+
+</tr>
+
+
+
+<tr>
+<th>Dépotde facture en présentiels</th>
+<td>
+{{ form.quantite_Depot_de_facture_en_presentiels.label }}
+{{ form.quantite_Depot_de_facture_en_presentiels }}
+{{ form.quantite_Depot_de_facture_en_presentiels.errors }}
+</td>
+<td>
+{{ form.statut_Depot_de_facture_en_presentiels.label }}
+{{ form.statut_Depot_de_facture_en_presentiels }}
+{{ form.statut_Depot_de_facture_en_presentiels.errors }}
+</td>
+<td>
+{{ form.total_Depot_de_facture_en_presentiels.label }}
+{{ form.Depot_de_facture_en_presentiels }}
+{{ form.total_Depot_de_facture_en_presentiels }}
+</td>
+
+</tr>
+
+
+
+
+                      </tbody>
+                  </table>
+                  </div>
+
+                  <!-- Ajoutez d'autres éléments selon vos besoins -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,725 @@
+{% extends "fonctionnality/main.html" %}
+{% load static %}
+
+{% block title %}GSC | Rapport: {{ rapport.titre }}{% endblock %}
+{% block recherche %}
+<form method="GET" action="{% url 'search' %}">
+    <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                </button>
+            </div>
+            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher ..." class="form-control"/>
+        </div>
+    </nav>
+</form>
+
+{% endblock %}
+{% block content %}
+
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<script>
+  tinymce.init({
+    selector: '#id_objectif',  // Sélecteur pour le champ 'objectif'
+    height: 300,
+    menubar: false,
+    plugins: 'lists link image preview',
+    toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent',
+  });
+</script>
+
+<!--<script>-->
+<!--// Définition de la hauteur maximale d'une page A4 en pixels (approximativement 1122px à 96 DPI)-->
+<!--const MAX_PAGE_HEIGHT = 1505;-->
+
+<!--function checkAndCreateNewPage() {-->
+<!--    const container = document.querySelector('.a4-container');-->
+
+<!--    if (container.scrollHeight > MAX_PAGE_HEIGHT) {-->
+<!--        const newPage = document.createElement('div');-->
+<!--        newPage.classList.add('a4-container');-->
+
+<!--        newPage.style.border = container.style.border;-->
+<!--        newPage.style.padding = container.style.padding;-->
+<!--        newPage.style.backgroundColor = container.style.backgroundColor;-->
+<!--        newPage.style.boxShadow = container.style.boxShadow;-->
+<!--        newPage.style.borderRadius = container.style.borderRadius;-->
+
+<!--        while (container.scrollHeight > MAX_PAGE_HEIGHT) {-->
+<!--            const lastChild = container.lastElementChild;-->
+<!--            if (lastChild) {-->
+<!--                newPage.prepend(lastChild);-->
+<!--            } else {-->
+<!--                break;-->
+<!--            }-->
+<!--        }-->
+
+<!--        container.parentNode.insertBefore(newPage, container.nextSibling);-->
+<!--    }-->
+<!--}-->
+
+<!--window.addEventListener('load', checkAndCreateNewPage);-->
+<!--document.addEventListener('input', checkAndCreateNewPage);-->
+<!--</script>-->
+
+<!--<style>-->
+<!--.a4-container {-->
+<!--    width: 100%;-->
+<!--    max-width: 210mm;-->
+<!--    min-height: 150mm; /* Hauteur minimale pour chaque page A4 */-->
+<!--    border: 5px solid #333;-->
+<!--    padding: 20px;-->
+<!--    margin: 20px auto;-->
+<!--    box-shadow: 0 0 10px rgba(0,0,0,0.5);-->
+<!--    background-color: #fff;-->
+<!--    border-radius: 5px;-->
+<!--    page-break-after: always; /* Force un saut de page après chaque conteneur */-->
+<!--}-->
+
+<!--/* Éviter les sauts de page à l'intérieur des tableaux */-->
+<!--table {-->
+<!--    page-break-inside: avoid;-->
+<!--    width: 100%;-->
+<!--    border-collapse: collapse;-->
+<!--    margin-bottom: 20px;-->
+<!--}-->
+
+<!--th, td {-->
+<!--    border: 1px solid #ddd;-->
+<!--    padding: 8px;-->
+<!--    text-align: left;-->
+<!--}-->
+
+<!--/* Spécifique pour l'impression */-->
+<!--@media print {-->
+<!--    .a4-container {-->
+<!--        margin: 0;-->
+<!--        box-shadow: none;-->
+<!--        border: none;-->
+<!--        page-break-after: always;-->
+<!--    }-->
+<!--    table {-->
+<!--        page-break-inside: avoid;-->
+<!--    }-->
+<!--}-->
+
+<!--@media (max-width: 768px) {-->
+<!--    .a4-container {-->
+<!--        margin: 10px;-->
+<!--        padding: 15px;-->
+<!--    }-->
+<!--}-->
+<!--</style>-->
+
+<style>
+.rapport-container {
+    font-family: 'Times New Roman', Times, serif; /* Police classique pour les rapports */
+    line-height: 1.5; /* Améliore la lisibilité */
+    color: #333; /* Couleur du texte */
+}
+
+h1, h2 {
+    margin: 20px 0; /* Espacement autour des titres */
+    text-align: center; /* Centrer les titres */
+}
+
+h1 {
+    font-size: 2.5rem; /* 40px */
+}
+
+h2 {
+    font-size: 2rem; /* 32px */
+}
+table {
+  page-break-inside: avoid;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  text-align: center; /* Centrage du texte dans l'ensemble */
+}
+
+table {
+    width: 99.9%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border:  1px solid #000;
+    padding: 5px;
+    text-align: center;
+    font-size: 9pt; /* Réduire la taille de la police des cellules du tableau */
+}
+
+table td {
+    word-wrap: break-word; /* Permet aux mots longs de se casser pour ne pas déborder */
+}
+</style>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 10px 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+  }
+
+  .breadcrumbs li {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumbs a {
+    text-decoration: none;
+    color: #495057;
+    font-weight: bold;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    background: linear-gradient(90deg, #495057, #28a745);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    background-position: left;
+  }
+
+  .breadcrumbs a:hover {
+    background-position: right;
+    transform: translateY(-3px);
+  }
+
+  .breadcrumbs .separator i {
+    color: #6c757d;
+    transition: transform 0.3s ease;
+  }
+
+  .breadcrumbs a:hover + .separator i {
+    transform: rotate(90deg);
+  }
+
+  .nav-home a {
+    color: #28a745;
+    font-size: 20px;
+  }
+
+  .nav-home a:hover {
+    transform: scale(1.2);
+  }
+
+  .nav-item a[title="Supprimer"] {
+    color: red;
+  }
+
+  .nav-item a[title="Supprimer"]:hover {
+    color: darkred;
+    transform: scale(1.1);
+  }
+
+
+     .remove-ajout {
+    margin-left: 10px;
+    background-color:rgba(8, 169, 16, 0.97);
+    color: rgb(238, 233, 233);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  /* Effet au survol */
+  .remove-ajout:hover {
+    background-color:rgb(9, 170, 19, 0.99); /* Rouge plus foncé */
+    transform: scale(1.05);  /* Légère augmentation de taille */
+  }
+
+  /* Effet au clic */
+  .remove-ajout:active {
+    background-color:rgb(255, 255, 255); /* Encore plus foncé */
+    transform: scale(0.95);   /* Effet de "pressé" */
+</style>
+
+<div class="container">
+  <div class="page-inner">
+    <div class="page-header">
+      <h3 class="fw-bold mb-3">RAPPORT COMPTABLE HEBDOMADAIRE</h3>
+      <ul class="breadcrumbs mb-3">
+        <li class="nav-home">
+          <a>
+            <i class="fas fa-calculator"></i>
+          </a>
+        </li>
+
+        <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'liste_comptabilite' %}">LISTE</a>
+        </li>
+          <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'ajouter_comptabilite' %}">NOUVEAU RAPPORT</a>
+        </li><li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'modifier_comptabilite' form.pk %}">MODIFIER</a>
+        </li>
+          <li class="separator">
+          <i class="icon-arrow-right"></i>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'supprimer_comptabilite' form.pk %}" title="Supprimer" style="color: red;"  onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce rapport ? Cliquez sur OK pour confirmer, ou sur Annuler pour annuler.');">SUPPRIMER</a>
+        </li>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header">
+                    <div class="d-flex align-items-center">
+                      <h4 class="card-title">TÉLÉCHARGEZ CE RAPPORT MAINTENANT !</h4>
+                      <a class="btn btn btn-round ms-auto remove-ajout" style="background-color: rgb(11, 163, 47); color: white; background-color: darkgreen;" href="{% url 'export_to_pdf' form.id %}">
+                            <i class="fa fa-download"></i> Télécharger
+                        </a>
+                    </div>
+            </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+                
+                <div class="container rapport-container">
+                  <!-- Contenu du rapport ici -->
+
+
+                  <br>
+                  <br>
+                  <br>
+                  <h1 style="text-align: center; text-decoration: underline;">Rapport d'activité Hebdomadaire</h1>
+                  <br>
+                  <br>
+                  <h3 style="text-align: center; text-decoration: underline;">Département: Comptabilité </h3>
+                  <br>
+                  <br>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-1"></div>
+                      <div class="col-md-11">
+                        <h5>Semaine: du <span style="font-weight: bold;">{{ start_date }} au {{ end_date }}</span></h5>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <h3 style="text-align: center; text-decoration: underline;">Objectifs de la semaine:</h3>
+                  <br>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-1"></div>
+
+
+
+  <div style="white-space: normal; overflow-wrap: break-word; word-wrap: break-word; padding-left: 40px; margin: 0; font-size: 1.4em; text-align: center;">
+          <style>
+            ul, ol {
+              margin: 0;
+              padding: 0;
+              list-style-position: inside;
+              display: inline-block; /* Permet de centrer la liste */
+              text-align: left; /* Pour garder le texte de la liste aligné à gauche */
+            }
+          </style>
+          {{ form.objectif|safe }}
+        </div>
+
+
+
+                    </div>
+                  </div>
+                  <br>
+                  <h3 style="text-align: center; text-decoration: underline;">Activités et réalisations:</h3>
+                  <br>
+                  <div>
+                    <div>
+                        <table>
+                      <thead>
+                          <tr>
+                              <th>ELEMENTS</th>
+                              <th>QUANTITES</th>
+                              <th>STATUTS/DETAILS</th>
+                              <th>POURCENTAGE</th>
+
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <th>Factures établies</th>
+                              <td>
+                                  {{ form.quantite_Facture_etablies.label }}
+                                  {{ form.quantite_Facture_etablies }}
+                                  {{ form.quantite_Facture_etablies.errors }}
+                              </td>
+                              <td>
+                                  {{ form.statut_Facture_etablies.label }}
+                                  {{ form.statut_Facture_etablies }}
+                                  {{ form.statut_Facture_etablies.errors }}
+                              </td>
+                              <td>
+                                  {{ form.pourcentage_Facture_etablies.label }}
+                                  {{ form.pourcentage_Facture_etablies }}
+                                  {{ form.pourcentage_Facture_etablies.errors }}
+                              </td>
+
+                          </tr>
+
+                          <tr>
+                            <th>Dévis</th>
+                            <td>
+                              {{ form.quantite_Devis.label }}
+                              {{ form.quantite_Devis}}
+                              {{ form.quantite_Devis.errors }}
+                          </td>
+                          <td>
+                              {{ form.statut_Devis.label }}
+                              {{ form.statut_Devis}}
+                              {{ form.statut_Devis.errors }}
+                          </td>
+                            <td>
+                                {{ form.pourcentage_Devis.label }}
+                                {{ form.pourcentage_Devis}}
+                                {{ form.pourcentage_Devis.errors }}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                          <th>Demande de cotation</th>
+                          <td>
+                              {{ form.quantite_Demande_de_cotation.label }}
+                              {{ form.quantite_Demande_de_cotation}}
+                              {{ form.quantite_Demande_de_cotation.errors }}
+                          </td>
+                          <td>
+                              {{ form.statut_Demande_de_cotation.label }}
+                              {{ form.statut_Demande_de_cotation}}
+                              {{ form.statut_Demande_de_cotation.errors }}
+                          </td>
+                          <td>
+                              {{ form.pourcentage_Demande_de_cotation.label }}
+                              {{ form.pourcentage_Demande_de_cotation }}
+                              {{ form.pourcentage_Demande_de_cotation.errors }}
+                          </td>
+
+                      </tr>
+
+
+                      <tr>
+                        <th>Livraison / Expedition</th>
+                        <td>
+                            {{ form.quantite_Livraison_Expedition.label }}
+                            {{ form.quantite_Livraison_Expedition }}
+                            {{ form.quantite_Livraison_Expedition.errors }}
+                        </td>
+                        <td>
+                          {{ form.statut_Livraison_Expedition.label }}
+                          {{ form.statut_Livraison_Expedition }}
+                          {{ form.statut_Livraison_Expedition.errors }}
+                      </td>
+                        <td>
+                            {{ form.pourcentage_Livraison_Expedition.label }}
+                            {{ form.pourcentage_Livraison_Expedition }}
+                            {{ form.pourcentage_Livraison_Expedition.errors }}
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                      <th>Cheques recus</th>
+                      <td>
+                          {{ form.quantite_Cheques_recus.label }}
+                          {{ form.quantite_Cheques_recus }}
+                          {{ form.quantite_Cheques_recus.errors }}
+                      </td>
+                      <td>
+                          {{ form.statut_Cheques_recus.label }}
+                          {{ form.statut_Cheques_recus }}
+                          {{ form.statut_Cheques_recus.errors }}
+                      </td>
+                      <td>
+                          {{ form.pourcentage_Cheques_recus.label }}
+                          {{ form.pourcentage_Cheques_recus }}
+                          {{ form.pourcentage_Cheques_recus.errors }}
+                      </td>
+
+                  </tr>
+
+
+                  <tr>
+                    <th>Depots chèques</th>
+                    <td>
+                        {{ form.quantite_Depots_cheques.label }}
+                        {{ form.quantite_Depots_cheques }}
+                        {{ form.quantite_Depots_cheques.errors }}
+                    </td>
+                    <td>
+                      {{ form.statut_Depots_cheques.label }}
+                      {{ form.statut_Depots_cheques }}
+                      {{ form.statut_Depots_cheques.errors }}
+                  </td>
+                    <td>
+                        {{ form.pourcentage_Depots_cheques.label }}
+                        {{ form.pourcentage_Depots_cheques }}
+                        {{ form.pourcentage_Depots_cheques.errors }}
+                    </td>
+
+                </tr>
+
+              <tr>
+                <th>Bon de Commande</th>
+                <td>
+                    {{ form.quantite_Bon_de_Commande.label }}
+                    {{ form.quantite_Bon_de_Commande }}
+                    {{ form.quantite_Bon_de_Commande.errors }}
+                </td>
+                <td>
+                  {{ form.statut_Bon_de_Commande.label }}
+                  {{ form.statut_Bon_de_Commande }}
+                  {{ form.statut_Bon_de_Commande.errors }}
+              </td>
+                <td>
+                    {{ form.pourcentage_Bon_de_Commande.label }}
+                    {{ form.pourcentage_Bon_de_Commande }}
+                    {{ form.pourcentage_Bon_de_Commande.errors }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+              <th>Recouvrements creances</th>
+              <td>
+                  {{ form.quantite_Recouvrements_creances.label }}
+                  {{ form.quantite_Recouvrements_creances }}
+                  {{ form.quantite_Recouvrements_creances.errors }}
+              </td>
+              <td>
+                  {{ form.statut_Recouvrements_creances.label }}
+                  {{ form.statut_Recouvrements_creances }}
+                  {{ form.statut_Recouvrements_creances.errors }}
+              </td>
+              <td>
+                  {{ form.pourcentage_Recouvrements_creances.label }}
+                  {{ form.pourcentage_Recouvrements_creances }}
+              </td>
+
+          </tr>
+
+
+          <tr>
+            <th>Recharge carte UBA</th>
+            <td>
+                {{ form.quantite_Recharge_carte_UBA.label }}
+                {{ form.quantite_Recharge_carte_UBA }}
+                {{ form.quantite_Recharge_carte_UBA.errors }}
+            </td>
+            <td>
+              {{ form.statut_Recharge_carte_UBA.label }}
+              {{ form.statut_Recharge_carte_UBA }}
+              {{ form.statut_Recharge_carte_UBA.errors }}
+          </td>
+            <td>
+                {{ form.pourcentage_Recharge_carte_UBA.label }}
+
+                {{ form.pourcentage_Recharge_carte_UBA }}
+            </td>
+
+        </tr>
+
+        <tr>
+          <th>Recharge carte ACCESS</th>
+          <td>
+              {{ form.quantite_Recharge_carte_ACCESS.label }}
+              {{ form.quantite_Recharge_carte_ACCESS }}
+              {{ form.quantite_Recharge_carte_ACCESS.errors }}
+          </td>
+          <td>
+              {{ form.statut_Recharge_carte_ACCESS.label }}
+              {{ form.statut_Recharge_carte_ACCESS }}
+              {{ form.statut_Recharge_carte_ACCESS.errors }}
+          </td>
+          <td>
+              {{ form.pourcentage_Recharge_carte_ACCESS.label }}
+              {{ form.pourcentage_Recharge_carte_ACCESS }}
+          </td>
+
+      </tr>
+
+
+      <tr>
+        <th>Receptions mails</th>
+        <td>
+            {{ form.quantite_Receptions_mails.label }}
+            {{ form.quantite_Receptions_mails }}
+            {{ form.quantite_Receptions_mails.errors }}
+        </td>
+        <td>
+          {{ form.statut_Receptions_mails.label }}
+          {{ form.statut_Receptions_mails }}
+          {{ form.statut_Receptions_mails.errors }}
+      </td>
+        <td>
+            {{ form.pourcentage_Receptions_mails.label }}
+
+            {{ form.pourcentage_Receptions_mails }}
+        </td>
+
+    </tr>
+
+
+    <tr>
+      <th>Mails envoyé(s)</th>
+      <td>
+          {{ form.quantite_Mails_envoyes.label }}
+          {{ form.quantite_Mails_envoyes }}
+          {{ form.quantite_Mails_envoyes.errors }}
+      </td>
+      <td>
+          {{ form.statut_Mails_envoyes.label }}
+          {{ form.statut_Mails_envoyes }}
+          {{ form.statut_Mails_envoyes.errors }}
+      </td>
+      <td>
+          {{ form.pourcentage_Mails_envoyes.label }}
+          {{ form.pourcentage_Mails_envoyes }}
+      </td>
+
+  </tr>
+
+
+  <tr>
+    <th>Saisir ecritures logiciel Sage 17</th>
+    <td>
+        {{ form.quantite_Saisir_ecritures_logiciel_Sage.label }}
+        {{ form.quantite_Saisir_ecritures_logiciel_Sage }}
+        {{ form.quantite_Saisir_ecritures_logiciel_Sage.errors }}
+    </td>
+    <td>
+      {{ form.statut_Saisir_ecritures_logiciel_Sage.label }}
+      {{ form.statut_Saisir_ecritures_logiciel_Sage }}
+      {{ form.statut_Saisir_ecritures_logiciel_Sage.errors }}
+  </td>
+    <td>
+        {{ form.pourcentage_Saisir_ecritures_logiciel_Sage.label }}
+        {{ form.pourcentage_Saisir_ecritures_logiciel_Sage }}
+    </td>
+
+</tr>
+
+
+<tr>
+  <th>Téldéclaration impot</th>
+  <td>
+      {{ form.quantite_Teledeclaration_impot.label }}
+      {{ form.quantite_Teledeclaration_impot }}
+      {{ form.quantite_Teledeclaration_impot.errors }}
+  </td>
+  <td>
+      {{ form.statut_Teledeclaration_impot.label }}
+      {{ form.statut_Teledeclaration_impot }}
+      {{ form.statut_Teledeclaration_impot.errors }}
+  </td>
+  <td>
+      {{ form.pourcentage_Teledeclaration_impot.label }}
+
+      {{ form.pourcentage_Teledeclaration_impot }}
+  </td>
+
+</tr>
+
+
+
+<tr>
+<th>Paiement impot</th>
+<td>
+  {{ form.quantite_Paiement_impot.label }}
+  {{ form.quantite_Paiement_impot }}
+  {{ form.quantite_Paiement_impot.errors }}
+</td>
+<td>
+  {{ form.statut_Paiement_impot.label }}
+  {{ form.statut_Paiement_impot }}
+  {{ form.statut_Paiement_impot.errors }}
+</td>
+<td>
+  {{ form.pourcentage_Paiement_impot.label }}
+  {{ form.pourcentage_Paiement_impot }}
+</td>
+
+</tr>
+
+
+
+<tr>
+<th>Dépotde facture en présentiels</th>
+<td>
+{{ form.quantite_Depot_de_facture_en_presentiels.label }}
+{{ form.quantite_Depot_de_facture_en_presentiels }}
+{{ form.quantite_Depot_de_facture_en_presentiels.errors }}
+</td>
+<td>
+{{ form.statut_Depot_de_facture_en_presentiels.label }}
+{{ form.statut_Depot_de_facture_en_presentiels }}
+{{ form.statut_Depot_de_facture_en_presentiels.errors }}
+</td>
+<td>
+{{ form.pourcentage_Depot_de_facture_en_presentiels.label }}
+{{ form.pourcentage_Depot_de_facture_en_presentiels }}
+</td>
+
+</tr>
+
+                      </tbody>
+                  </table>
+                    </div>
+                      <br>
+                        <br>
+                        <br>
+                      <div class="container">
+                    <div class="row">
+                      <div class="col-md-1"></div>
+                      <div class="col-md-11">
+                          <h5>{{ form.description_autre|safe }}</h5>
+                          <br>
+                        <br><br>
+                        <br><br>
+                        <br>
+
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+
+                  <!-- Ajoutez d'autres éléments selon vos besoins -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

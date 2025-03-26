@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <link href="{{ base_url }}static/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{ base_url }}static/css/rapport.css" rel="stylesheet">
+<style>
+/* CSS pour rendre le tableau plus compact et s'assurer qu'il tienne sur une page A4 */
+@page {
+    size: A4;
+    margin: 20mm;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 10pt; /* Réduire la taille de la police pour que le tableau tienne */
+}
+
+table {
+    width: 99.9%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border:  1px solid #000;
+    padding: 5px;
+    text-align: center;
+    font-size: 9pt; /* Réduire la taille de la police des cellules du tableau */
+}
+
+table td {
+    word-wrap: break-word; /* Permet aux mots longs de se casser pour ne pas déborder */
+}
+
+.container {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Empêcher que le tableau dépasse la largeur de la page */
+.table-responsive {
+    overflow-x: auto;
+}
+
+</style>
+</head>
+<body style="font-family: 'Times New Roman', Times, serif;">
+
+
+
+
+<div class="container mt-5">
+<div>
+
+
+
+  <div class="table-responsive">
+      <table>
+<tr>
+    <tr>
+  <td colspan="16" style="color: white; text-align: center; margin: 0; flex-direction: column; justify-content: center; height: 50px; background-color: rgb(50, 76, 177); font-size: 24px; font-weight: bold;">
+    Rapport hebdommadaire service commercial / marketing
+  </td>
+</tr>
+
+  <td colspan="16" style="text-align: center; font-size: 18px; font-weight: bold;"><strong>semaine du {{ semaine_formatee }}</strong></td>
+</tr>
+<tr>
+  <td rowspan="2">Indicateurs</td>
+  <td rowspan="2">Objectifs</td>
+  <td rowspan="2">Quantité</td>
+  <td rowspan="2">Total</td>
+  <td rowspan="2">Acteurs</td>
+  <td rowspan="2">Activités</td>
+  <td colspan="2">Clients</td>
+  <td colspan="4">Liste Produits</td>
+  <td rowspan="2">Statut</td>
+  <td rowspan="2">Difficultés rencontrées</td>
+  <td rowspan="2">Raisons de l'échec de l'objectif</td>
+  <td rowspan="2">Actions correctives</td>
+</tr>
+<tr>
+  <td style="color: red;"><strong>Entreprises</strong></td>
+  <td style="color: red;"><strong>Particuliers</strong></td>
+  <td style="color: red;"><strong>Services</strong></td>
+  <td style="color: red;"><strong>Consommables</strong></td>
+  <td style="color: red;"><strong>Matériel informatique</strong></td>
+  <td style="color: red;"><strong>Formation</strong></td>
+</tr>
+</tr>
+<tr style="text-align: center;">
+                <td>{{ marketing.indicateur }} {{ marketing.indicateur.errors }}</td>
+                <td>{{ marketing.objectifs }} {{ marketing.objectifs.errors }}</td>
+                <td>{{ marketing.quantites }} {{ marketing.quantites.errors }}</td>
+                <td>{{ marketing.Total }} {{ marketing.Total.errors }}</td>
+                <td>{{ marketing.acteur }} {{ marketing.acteur.errors }}</td>
+                <td>{{ marketing.Activites }} {{ marketing.Activites.errors }}</td>
+                <td>{{ marketing.Entreprises }} {{ marketing.Entreprises.errors }}</td>
+                <td>{{ marketing.Particuliers }} {{ marketing.Particuliers.errors }}</td>
+                <td>{{ marketing.Services }} {{ marketing.Services.errors }}</td>
+                <td>{{ marketing.Consommables }} {{ marketing.Consommables.errors }}</td>
+                <td>{{ marketing.materiel_informatique }} {{ marketing.materiel_informatique.errors }}</td>
+                <td>{{ marketing.formation }} {{ marketing.formation.errors }}</td>
+                <td>{{ marketing.Statut }} {{ marketing.Statut.errors }}</td>
+                <td>{{ marketing.Difficultes_rencontrees }} {{ marketing.Difficultes_rencontrees.errors }}</td>
+                <td>{{ marketing.Raisons_e_l_echec_de_l_objectif }} {{ marketing.Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                <td>{{ marketing.Actions_correctives }} {{ marketing.Actions_correctives.errors }}</td>
+            </tr>
+
+          {% for sub in sub_marketing_data %}
+          {% if sub.indicateur and sub.objectifs %}
+  <tr>
+  <td>{{ sub.indicateur }} {{ sub.indicateur.errors }}</td>
+                <td>{{ sub.objectifs }} {{ sub.objectifs.errors }}</td>
+                <td>{{ sub.quantites }} {{ sub.quantites.errors }}</td>
+                <td>{{ sub.Total }} {{ sub.Total.errors }}</td>
+                <td>{{ sub.acteur }} {{ sub.acteur.errors }}</td>
+                <td>{{ sub.Activites }} {{ sub.Activites.errors }}</td>
+                <td>{{ sub.Entreprises }} {{ sub.Entreprises.errors }}</td>
+                <td>{{ sub.Particuliers }} {{ sub.Particuliers.errors }}</td>
+                <td>{{ sub.Services }} {{ sub.Services.errors }}</td>
+                <td>{{ sub.Consommables }} {{ sub.Consommables.errors }}</td>
+                <td>{{ sub.materiel_informatique }} {{ sub.materiel_informatique.errors }}</td>
+                <td>{{ sub.formation }} {{ sub.formation.errors }}</td>
+                <td>{{ sub.Statut }} {{ sub.Statut.errors }}</td>
+                <td>{{ sub.Difficultes_rencontrees }} {{ sub.Difficultes_rencontrees.errors }}</td>
+                <td>{{ sub.Raisons_e_l_echec_de_l_objectif }} {{ sub.Raisons_e_l_echec_de_l_objectif.errors }}</td>
+                <td>{{ sub.Actions_correctives }} {{ sub.Actions_correctives.errors }}</td>
+</tr>
+          {% endif %}
+ {% endfor %}
+
+</table>
+<br>
+</div>
+<br>
+<div class="col-md-12">{{ marketing.autre|safe }}</div>
+<br>
+</div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

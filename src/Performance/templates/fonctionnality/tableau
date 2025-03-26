@@ -1,0 +1,29 @@
+<table border="1">
+    <tr>
+        <th>Colonne 1</th>
+        <th>Colonne 2</th>
+    </tr>
+    <tr>
+        <td>Cellule 1.1</td>
+        <td>
+            <table border="1">
+                <tr>
+                    <th>Sous-colonne 1</th>
+                    <th>Sous-colonne 2</th>
+                </tr>
+                <tr>
+                    <td>Sous-cellule 1.1</td>
+                    <td>Sous-cellule 1.2</td>
+                </tr>
+                <tr>
+                    <td>Sous-cellule 2.1</td>
+                    <td>Sous-cellule 2.2</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>Cellule 1.2</td>
+        <td>Cellule 2.2</td>
+    </tr>
+</table>
