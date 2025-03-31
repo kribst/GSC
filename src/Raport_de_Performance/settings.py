@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+import environ
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Performance',
+    'rest_framework',
     'tinymce',
 ]
 
@@ -75,12 +78,11 @@ WSGI_APPLICATION = 'Raport_de_Performance.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(env('DATABASE_URL'))
 }
+
 
 
 # Password validation
@@ -146,10 +148,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'plugins': 'lists link image preview',
     'toolbar': 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
 }
-
-
-
-
 
 
 
